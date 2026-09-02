@@ -96,3 +96,13 @@ notebooks/*.nbconvert.*
 *.graphml
 *.cypher
 graph/exporters/
+
+# ----- Databases -----
+*.sqlite
+*.sqlite3
+*.db
+insider_threat.db
+
+# ----- XAI Outputs -----
+xai/visualizations/outputs/*
+xai/reports/outputs/*

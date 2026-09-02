@@ -1,18 +1,13 @@
-/**
- * Redux Store Configuration
- *
- * Central Redux Toolkit store with all slices.
- *
- * Phase 0: Stub only.
- *
- * TODO (Phase 8): Configure with Redux Toolkit and RTK Query.
- */
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './slices/authSlice';
+import dashboardReducer from './slices/dashboardSlice';
 
-// TODO: Import and configure store with configureStore
-// import { configureStore } from "@reduxjs/toolkit";
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    dashboard: dashboardReducer,
+  },
+});
 
-export type RootState = Record<string, unknown>;
-export type AppDispatch = unknown;
-
-// Placeholder export
-export const store = {};
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

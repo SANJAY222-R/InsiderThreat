@@ -1,49 +1,56 @@
-"""
-Insider Threat Detection System — FastAPI Application Factory
-=============================================================
+import uvicorn
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
+from backend.app.database.database import engine, Base
 
-This module creates and configures the FastAPI application instance.
-All routers, middleware, and event handlers are registered here.
+# Import Routers
+from backend.app.api import (
+    auth_router, users_router, prediction_router, 
+    graph_router, xai_router, alerts_router, reports_router
+)
+from backend.app.websocket.manager import manager
 
-Phase 0: Scaffold only. No endpoints implemented.
-"""
+# Create DB Tables (for SQLite MVP)
+Base.metadata.create_all(bind=engine)
 
-from fastapi import FastAPI
+app = FastAPI(
+    title="Enterprise Insider Threat Detection API",
+    description="FastAPI Backend for Temporal Heterogeneous Graph Learning System",
+    version="1.0.0"
+)
 
-__all__ = ["create_app"]
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # In production, restrict this
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Include Routers
+app.include_router(auth_router.router, prefix="/api/v1")
+app.include_router(users_router.router, prefix="/api/v1")
+app.include_router(prediction_router.router, prefix="/api/v1")
+app.include_router(graph_router.router, prefix="/api/v1")
+app.include_router(xai_router.router, prefix="/api/v1")
+app.include_router(alerts_router.router, prefix="/api/v1")
+app.include_router(reports_router.router, prefix="/api/v1")
 
-def create_app() -> FastAPI:
-    """
-    Application factory for the Insider Threat Detection API.
+# WebSocket Endpoint
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await manager.broadcast(f"Echo: {data}")
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
 
-    Returns:
-        FastAPI: Configured application instance.
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "service": "insider-threat-backend"}
 
-    TODO (Phase 1):
-        - Register API v1 router
-        - Configure CORS middleware
-        - Configure authentication middleware
-        - Register startup/shutdown events
-        - Configure exception handlers
-        - Set up database connections
-    """
-    app = FastAPI(
-        title="Insider Threat Detection System",
-        description="Temporal Heterogeneous Graph Learning for Explainable Insider Threat Detection",
-        version="0.1.0",
-        docs_url="/api/docs",
-        redoc_url="/api/redoc",
-    )
-
-    # TODO: Register routers
-    # app.include_router(api_v1_router, prefix="/api/v1")
-
-    # TODO: Register middleware
-    # app.add_middleware(...)
-
-    # TODO: Register event handlers
-    # @app.on_event("startup")
-    # @app.on_event("shutdown")
-
-    return app
+if __name__ == "__main__":
+    uvicorn.run("backend.app.main:app", host="0.0.0.0", port=8000, reload=True)

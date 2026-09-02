@@ -8,39 +8,48 @@ model:
 
   # Architecture
   architecture:
+    embedding_dim: 128
     hidden_dim: 128
-    num_heads: 8
     num_layers: 3
+    num_heads: 8
     temporal_dim: 64
     dropout: 0.2
     activation: "elu"
     use_batch_norm: true
     use_residual: true
+    pooling_type: "attention" # mean, max, attention, hierarchical
+    time_encoding: "sinusoidal" # sinusoidal, learnable
 
   # Node types
   node_types:
     - user
-    - device
-    - email
+    - host
     - file
-    - url
-    - pc
+    - usb
+    - email
+    - website
+    - session
+    - department
 
   # Edge types (src, relation, dst)
   edge_types:
-    - [user, logon, pc]
-    - [user, device_connect, device]
-    - [user, email_send, email]
-    - [email, email_receive, user]
-    - [user, file_copy, file]
-    - [user, http_visit, url]
-    - [user, works_with, user]
+    - [user, LOGIN_TO, host]
+    - [user, ACCESS_FILE, file]
+    - [user, INSERT_USB, usb]
+    - [user, SEND_EMAIL, email]
+    - [user, VISIT_WEBSITE, website]
+    - [host, CONNECT_HOST, host]
+    - [user, SESSION_MEMBER, session]
+    - [user, BELONGS_TO, department]
 
 training:
   epochs: 200
   batch_size: 512
+  optimizer: "adamw"
   learning_rate: 0.001
   weight_decay: 0.0001
+  gradient_clipping: 1.0
+  mixed_precision: true
   scheduler:
     type: "cosine"
     warmup_epochs: 10
@@ -49,9 +58,10 @@ training:
     patience: 20
     min_delta: 0.001
     monitor: "val_auc_roc"
+  loss_function: "focal" # bce, cross_entropy, focal, weighted
   class_weights:
     normal: 1.0
-    threat: 50.0  # Heavy overweight for rare threat class
+    threat: 50.0
 
 evaluation:
   metrics:

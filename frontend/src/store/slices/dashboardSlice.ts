@@ -1,23 +1,31 @@
-/**
- * Dashboard Slice
- *
- * Redux state for dashboard data (threat overview, stats).
- *
- * Phase 0: Stub only.
- */
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export interface DashboardState {
-  totalAlerts: number;
-  activeThreats: number;
-  riskDistribution: Record<string, number>;
-  isLoading: boolean;
+interface DashboardState {
+  liveAlerts: any[];
+  activeUsers: number;
+  criticalIncidents: number;
 }
 
-export const initialDashboardState: DashboardState = {
-  totalAlerts: 0,
-  activeThreats: 0,
-  riskDistribution: {},
-  isLoading: false,
+const initialState: DashboardState = {
+  liveAlerts: [],
+  activeUsers: 0,
+  criticalIncidents: 0,
 };
 
-// TODO: Implement with createSlice
+const dashboardSlice = createSlice({
+  name: 'dashboard',
+  initialState,
+  reducers: {
+    addLiveAlert(state, action: PayloadAction<any>) {
+      state.liveAlerts.unshift(action.payload);
+      if (state.liveAlerts.length > 50) state.liveAlerts.pop();
+    },
+    updateStats(state, action: PayloadAction<{ users: number; critical: number }>) {
+      state.activeUsers = action.payload.users;
+      state.criticalIncidents = action.payload.critical;
+    },
+  },
+});
+
+export const { addLiveAlert, updateStats } = dashboardSlice.actions;
+export default dashboardSlice.reducer;

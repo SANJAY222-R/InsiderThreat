@@ -1,30 +1,13 @@
+from sqlalchemy import Column, String, Boolean, Float, DateTime
+from sqlalchemy.sql import func
+from backend.app.database.database import Base
 
-"""
-User ORM Model
-===============
+class User(Base):
+    __tablename__ = "users"
 
-Represents system users (analysts, admins, auditors).
-
-Phase 0: Schema stub only.
-"""
-
-__all__ = ["User"]
-
-
-class User:
-    """
-    User database model.
-
-    Attributes:
-        id: Primary key.
-        username: Unique login name.
-        email: User email address.
-        hashed_password: Bcrypt-hashed password.
-        role: User role (admin, analyst, auditor, viewer).
-        is_active: Account active flag.
-        created_at: Account creation timestamp.
-        updated_at: Last update timestamp.
-
-    TODO (Phase 1): Implement with SQLAlchemy mapped columns.
-    """
-    pass
+    id = Column(String, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    role = Column(String, default="analyst")
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

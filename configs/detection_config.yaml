@@ -1,0 +1,55 @@
+# =============================================================================
+# Enterprise Threat Detection Engine Configuration
+# =============================================================================
+
+# Global Engine Settings
+engine:
+  name: "THGNN-Threat-Detector"
+  version: "1.0.0"
+  storage_type: "json" # json or sqlite (for history)
+  history_dir: "threat_detection/history/data"
+  reports_dir: "reports"
+
+# Risk Thresholds & Severity Mapping
+risk_scoring:
+  # Normalization weights for aggregating scores
+  weights:
+    user_base_risk: 0.4
+    session_max_risk: 0.3
+    behavior_anomaly: 0.3
+  
+  severity_mapping:
+    normal: [0, 20]
+    low: [21, 50]
+    medium: [51, 75]
+    high: [76, 90]
+    critical: [91, 100]
+
+# Behavioral Analysis Thresholds
+behavioral_rules:
+  abnormal_login_hours:
+    start_hour: 20 # 8 PM
+    end_hour: 6    # 6 AM
+  excessive_file_access: 
+    threshold: 50 # files per session
+  large_file_transfer_mb:
+    threshold: 500
+  usb_misuse:
+    allow_list: [] # allowed device IDs
+  external_email_burst:
+    threshold: 20 # emails per hour
+  rapid_host_switching:
+    threshold: 3 # distinct hosts per hour
+  long_session_hours:
+    threshold: 12
+
+# Alert Generation
+alerts:
+  min_score_for_alert: 30
+  suppression_window_minutes: 60 # Suppress duplicate alerts for same entity/rule
+
+# Incident Correlation
+incidents:
+  correlation_window_hours: 24
+  similarity_threshold: 0.8
+  auto_group_by_user: true

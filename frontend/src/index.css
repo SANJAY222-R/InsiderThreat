@@ -1,58 +1,35 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/*
- * Insider Threat Detection System — Global Styles
- *
- * TailwindCSS v4 with custom theme configuration.
- * Phase 0: Base setup only.
- *
- * TODO (Phase 8): Add custom design system tokens, component styles.
- */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Custom theme overrides */
-@theme {
-  --color-primary: #4F46E5;
-  --color-primary-foreground: #FFFFFF;
-  --color-secondary: #6366F1;
-  --color-accent: #8B5CF6;
-  --color-destructive: #EF4444;
-  --color-warning: #F59E0B;
-  --color-success: #10B981;
-
-  --color-background: #0F172A;
-  --color-foreground: #F8FAFC;
-  --color-card: #1E293B;
-  --color-card-foreground: #E2E8F0;
-  --color-border: #334155;
-  --color-muted: #64748B;
-  --color-muted-foreground: #94A3B8;
-
-  /* Node type colors for graph */
-  --color-node-user: #4F46E5;
-  --color-node-device: #10B981;
-  --color-node-email: #F59E0B;
-  --color-node-file: #EF4444;
-  --color-node-url: #8B5CF6;
-  --color-node-pc: #6B7280;
-
-  /* Threat level colors */
-  --color-threat-low: #10B981;
-  --color-threat-medium: #F59E0B;
-  --color-threat-high: #F97316;
-  --color-threat-critical: #EF4444;
-
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+@layer base {
+  body {
+    @apply bg-[#0B0F19] text-gray-200 antialiased;
+    font-family: 'Inter', sans-serif;
+  }
 }
 
-/* Base layer styles */
-body {
-  margin: 0;
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-sans);
+/* Custom Scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 6px;
+  border: 2px solid #0B0F19;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
 }
 
-#root {
-  min-height: 100vh;
+/* Selection Color */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #fff;
 }

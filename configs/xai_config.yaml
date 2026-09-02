@@ -1,0 +1,34 @@
+# =============================================================================
+# Explainable AI (XAI) Engine Configuration
+# =============================================================================
+
+engine:
+  name: "THGNN-XAI"
+  version: "1.0.0"
+  output_dir: "xai/visualizations/outputs"
+  reports_dir: "xai/reports/outputs"
+
+# When to generate full Captum explanations
+attribution:
+  # Only compute gradients/attribution for alerts >= min_severity
+  min_severity: "MEDIUM"
+  method: "integrated_gradients" # integrated_gradients, feature_ablation
+  num_steps: 50 # IG steps
+  
+# NLG Templates for Analyst Explanations
+nl_generation:
+  template_style: "soc_analyst" # soc_analyst, executive
+  confidence_threshold_high: 0.8
+  confidence_threshold_low: 0.4
+
+# Subgraph Extraction
+graph_explanation:
+  max_hops: 2
+  top_k_nodes: 10
+  top_k_edges: 20
+
+counterfactuals:
+  perturbation_types:
+    - "remove_usb_events"
+    - "normalize_login_time"
+    - "reduce_file_access"

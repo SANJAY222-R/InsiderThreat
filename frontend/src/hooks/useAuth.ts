@@ -1,22 +1,22 @@
-/**
- * useAuth Hook
- *
- * Authentication state management hook.
- * Provides login, logout, and current user state.
- *
- * Phase 0: Stub only.
- *
- * TODO (Phase 8): Implement with JWT token management.
- */
+import { useDispatch, useSelector } from 'react-redux';
+import type { RootState } from '../store';
+import { loginSuccess, logout } from '../store/slices/authSlice';
 
-export function useAuth() {
-  // TODO: Implement authentication logic
-  return {
-    user: null,
-    isAuthenticated: false,
-    isLoading: false,
-    login: async (_username: string, _password: string) => {},
-    logout: async () => {},
-    refreshToken: async () => {},
+export const useAuth = () => {
+  const dispatch = useDispatch();
+  const authState = useSelector((state: RootState) => state.auth);
+
+  const login = (user: any, token: string) => {
+    dispatch(loginSuccess({ user, token }));
   };
-}
+
+  const performLogout = () => {
+    dispatch(logout());
+  };
+
+  return {
+    ...authState,
+    login,
+    logout: performLogout,
+  };
+};
