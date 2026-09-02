@@ -1,0 +1,24 @@
+paths:
+  base_dir: "C:/Users/HP/Desktop/InsiderThreat"
+  processed_dir: "${paths.base_dir}/dataset/processed"
+  features_dir: "${paths.base_dir}/features"
+  reports_dir: "${paths.base_dir}/reports/features"
+  logs_dir: "${paths.base_dir}/logs"
+  metadata_dir: "${paths.base_dir}/metadata"
+
+options:
+  normalization_method: "standard" # minmax, standard, robust, none
+  handle_missing: true
+  generate_reports: true
+  chunk_size: 1000000
+
+features:
+  user_behavior: true
+  file_activity: true
+  usb_activity: true
+  email_activity: true
+  web_activity: true
+  temporal: true
+  sessions: true
+  statistics: true
+  risk_indicators: true

@@ -1,0 +1,101 @@
+# =============================================================================
+# CERT r4.2 Dataset Schema Definitions
+# =============================================================================
+# Column names, types, and descriptions for each CSV file.
+# =============================================================================
+
+logon:
+  description: "User logon/logoff events on PCs"
+  columns:
+    id: {type: string, description: "Unique event ID within this file"}
+    date: {type: datetime, format: "%m/%d/%Y %H:%M:%S", description: "Event timestamp"}
+    user: {type: string, description: "User ID (e.g., ACM2278)"}
+    pc: {type: string, description: "PC identifier (e.g., PC-0648)"}
+    activity: {type: string, description: "Event type", values: ["Logon", "Logoff"]}
+  notes:
+    - "Weekends and statutory holidays included"
+    - "Screen unlocks recorded as logons; screen locks NOT recorded"
+    - "Some daily logons intentionally missing (dirty data simulation)"
+    - "1000 users, each with assigned PC + 100 shared machines"
+
+device:
+  description: "USB / removable device connect/disconnect events"
+  columns:
+    id: {type: string, description: "Unique event ID within this file"}
+    date: {type: datetime, format: "%m/%d/%Y %H:%M:%S", description: "Event timestamp"}
+    user: {type: string, description: "User ID"}
+    pc: {type: string, description: "PC identifier"}
+    activity: {type: string, description: "Event type", values: ["Connect", "Disconnect"]}
+  notes:
+    - "Some connect events may lack disconnect (user powered off before removing)"
+    - "Deviation from normal usage is significant"
+
+email:
+  description: "Email messages with content and recipients"
+  columns:
+    id: {type: string, description: "Unique event ID within this file"}
+    date: {type: datetime, format: "%m/%d/%Y %H:%M:%S", description: "Event timestamp"}
+    user: {type: string, description: "Sender user ID"}
+    pc: {type: string, description: "Sender PC"}
+    to: {type: string, description: "Semicolon-separated recipient list"}
+    cc: {type: string, description: "Semicolon-separated CC list"}
+    bcc: {type: string, description: "Semicolon-separated BCC list"}
+    from: {type: string, description: "Sender email address"}
+    size: {type: integer, description: "Message size in bytes (excludes attachments)"}
+    attachment_count: {type: integer, description: "Number of attachments"}
+    content: {type: string, description: "Space-separated content keywords"}
+  notes:
+    - "Driven by underlying friendship and organizational graphs"
+    - "Non-employees use non-DTAA email addresses"
+    - "Content keywords represent topics, not subject/body distinction"
+
+http:
+  description: "Web browsing activity with URLs and content"
+  columns:
+    id: {type: string, description: "Unique event ID within this file"}
+    date: {type: datetime, format: "%m/%d/%Y %H:%M:%S", description: "Event timestamp"}
+    user: {type: string, description: "User ID"}
+    pc: {type: string, description: "PC identifier"}
+    url: {type: string, description: "Full URL with path"}
+    content: {type: string, description: "Space-separated content keywords"}
+  notes:
+    - "WARNING: Domain names randomly generated, may point to malicious sites"
+    - "Words in URL usually related to page topic"
+    - "~14.5 GB — largest file in dataset"
+
+file:
+  description: "File copy events to removable media"
+  columns:
+    id: {type: string, description: "Unique event ID within this file"}
+    date: {type: datetime, format: "%m/%d/%Y %H:%M:%S", description: "Event timestamp"}
+    user: {type: string, description: "User ID"}
+    pc: {type: string, description: "PC identifier"}
+    filename: {type: string, description: "Filename with extension"}
+    content: {type: string, description: "Hex file header + space-separated content keywords"}
+  notes:
+    - "Each entry = file copy to removable media"
+    - "File header correlates with extension"
+    - "Deviation from normal copy count is significant"
+
+psychometric:
+  description: "Big Five personality scores for employees"
+  columns:
+    employee_name: {type: string, description: "Employee full name"}
+    user_id: {type: string, description: "User ID"}
+    O: {type: float, description: "Openness score"}
+    C: {type: float, description: "Conscientiousness score"}
+    E: {type: float, description: "Extroversion score"}
+    A: {type: float, description: "Agreeableness score"}
+    N: {type: float, description: "Neuroticism score"}
+  notes:
+    - "Extroversion drives friendship graph connections"
+    - "Conscientiousness drives late work arrivals"
+    - "Latent in real deployment — offered for research"
+
+ldap:
+  description: "Monthly LDAP directory snapshots (employee roster)"
+  location: "LDAP/*.csv (18 monthly files: 2009-12 to 2011-05)"
+  notes:
+    - "Tracks organizational changes over time"
+    - "Employee terminations visible as disappearances"
+    - "ITAdmin role = systems administrators with global access"

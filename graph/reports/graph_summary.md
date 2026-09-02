@@ -1,0 +1,1 @@
+# Enterprise Temporal Heterogeneous Graph Summary\n\n- **Total Nodes:** 611693\n- **Total Edges:** 1250000\n

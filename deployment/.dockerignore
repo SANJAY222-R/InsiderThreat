@@ -1,0 +1,16 @@
+# Docker ignore
+.git
+.gitignore
+.vscode
+.idea
+__pycache__
+*.pyc
+node_modules
+.env
+r4.2
+dataset/raw
+logs
+reports
+ai/checkpoints
+*.md
+!README.md

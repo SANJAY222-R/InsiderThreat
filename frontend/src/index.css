@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/*
+ * Insider Threat Detection System — Global Styles
+ *
+ * TailwindCSS v4 with custom theme configuration.
+ * Phase 0: Base setup only.
+ *
+ * TODO (Phase 8): Add custom design system tokens, component styles.
+ */
+
+/* Custom theme overrides */
+@theme {
+  --color-primary: #4F46E5;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #6366F1;
+  --color-accent: #8B5CF6;
+  --color-destructive: #EF4444;
+  --color-warning: #F59E0B;
+  --color-success: #10B981;
+
+  --color-background: #0F172A;
+  --color-foreground: #F8FAFC;
+  --color-card: #1E293B;
+  --color-card-foreground: #E2E8F0;
+  --color-border: #334155;
+  --color-muted: #64748B;
+  --color-muted-foreground: #94A3B8;
+
+  /* Node type colors for graph */
+  --color-node-user: #4F46E5;
+  --color-node-device: #10B981;
+  --color-node-email: #F59E0B;
+  --color-node-file: #EF4444;
+  --color-node-url: #8B5CF6;
+  --color-node-pc: #6B7280;
+
+  /* Threat level colors */
+  --color-threat-low: #10B981;
+  --color-threat-medium: #F59E0B;
+  --color-threat-high: #F97316;
+  --color-threat-critical: #EF4444;
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Base layer styles */
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+#root {
+  min-height: 100vh;
+}

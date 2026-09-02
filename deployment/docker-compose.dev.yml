@@ -1,0 +1,26 @@
+# =============================================================================
+# Docker Compose — Development Overrides
+# =============================================================================
+version: "3.9"
+
+services:
+  backend:
+    build:
+      target: deps
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+    volumes:
+      - ../backend:/app/backend
+      - ../configs:/app/configs
+    command: uvicorn backend.app.main:create_app --host 0.0.0.0 --port 8000 --reload --factory
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../frontend/src:/app/src

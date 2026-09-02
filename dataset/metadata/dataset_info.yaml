@@ -1,0 +1,50 @@
+# =============================================================================
+# CERT Insider Threat Dataset r4.2 — Provenance & Statistics
+# =============================================================================
+
+provenance:
+  name: "CERT Insider Threat Dataset"
+  version: "r4.2"
+  publisher: "Carnegie Mellon University, Software Engineering Institute, CERT Division"
+  license: "ExactData License (see r4.2/license.txt)"
+  url: "https://kilthub.cmu.edu/articles/dataset/Insider_Threat_Test_Dataset/12841247"
+
+description: |
+  Synthetic enterprise environment dataset with realistic insider threat scenarios.
+  Contains 1000 simulated employees over an 18-month period with logon, device,
+  email, HTTP, file, psychometric, and LDAP data. Two insider threat scenarios
+  are embedded. This is a "dense needles" dataset with an unrealistically high
+  amount of red team data interspersed.
+
+date_range:
+  start: "2009-12-01"
+  end: "2011-05-31"
+  duration_months: 18
+
+file_sizes:
+  logon.csv: "~56 MB"
+  device.csv: "~28 MB"
+  email.csv: "~1.3 GB"
+  http.csv: "~14.5 GB"
+  file.csv: "~184 MB"
+  psychometric.csv: "~44 KB"
+  LDAP: "~2.5 MB (18 monthly files)"
+
+entity_counts:
+  users: 1000
+  shared_machines: 100
+  insider_threats: 2
+
+threat_indicators:
+  - "Radical changes in behavior"
+  - "Unusual logon times for that user"
+  - "Logins to another user's dedicated machine"
+  - "Increased device usage"
+  - "Employee termination"
+  - "Changes in email volume"
+  - "Unusual web browsing habits"
+  - "Radical social graph changes"
+  - "Topic shifts in emails, files, web visits"
+
+errata:
+  - "Field IDs unique within CSV but not globally unique"

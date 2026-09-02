@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "schema_definition": {
+    "properties": {
+      "node_id": {
+        "description": "Unique Enterprise ID mapping to the node",
+        "title": "Node Id",
+        "type": "string"
+      },
+      "entity_type": {
+        "description": "Type of the entity (e.g., User, Host)",
+        "title": "Entity Type",
+        "type": "string"
+      },
+      "attributes": {
+        "additionalProperties": true,
+        "description": "Dictionary of string or numeric attributes",
+        "title": "Attributes",
+        "type": "object"
+      },
+      "feature_vector_ref": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Reference to a row in feature matrices",
+        "title": "Feature Vector Ref"
+      },
+      "metadata": {
+        "additionalProperties": true,
+        "description": "Creation tracking metadata",
+        "title": "Metadata",
+        "type": "object"
+      }
+    },
+    "required": [
+      "node_id",
+      "entity_type",
+      "attributes",
+      "feature_vector_ref",
+      "metadata"
+    ],
+    "title": "NodeSchema",
+    "type": "object"
+  }
+}

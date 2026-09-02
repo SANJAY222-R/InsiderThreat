@@ -1,0 +1,64 @@
+# =============================================================================
+# THGNN Model Configuration
+# =============================================================================
+
+model:
+  name: "THGNN"
+  version: "1.0.0"
+
+  # Architecture
+  architecture:
+    hidden_dim: 128
+    num_heads: 8
+    num_layers: 3
+    temporal_dim: 64
+    dropout: 0.2
+    activation: "elu"
+    use_batch_norm: true
+    use_residual: true
+
+  # Node types
+  node_types:
+    - user
+    - device
+    - email
+    - file
+    - url
+    - pc
+
+  # Edge types (src, relation, dst)
+  edge_types:
+    - [user, logon, pc]
+    - [user, device_connect, device]
+    - [user, email_send, email]
+    - [email, email_receive, user]
+    - [user, file_copy, file]
+    - [user, http_visit, url]
+    - [user, works_with, user]
+
+training:
+  epochs: 200
+  batch_size: 512
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler:
+    type: "cosine"
+    warmup_epochs: 10
+    min_lr: 0.00001
+  early_stopping:
+    patience: 20
+    min_delta: 0.001
+    monitor: "val_auc_roc"
+  class_weights:
+    normal: 1.0
+    threat: 50.0  # Heavy overweight for rare threat class
+
+evaluation:
+  metrics:
+    - auc_roc
+    - auc_pr
+    - f1_macro
+    - precision
+    - recall
+    - false_positive_rate
+  threshold: 0.5

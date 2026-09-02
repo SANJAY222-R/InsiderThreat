@@ -1,0 +1,98 @@
+# ============================================================================
+# Insider Threat Detection System — .gitignore
+# ============================================================================
+
+# ----- Python -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# ----- Virtual Environments -----
+.venv/
+venv/
+env/
+ENV/
+
+# ----- IDE -----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ----- Node / Frontend -----
+node_modules/
+frontend/dist/
+frontend/build/
+.eslintcache
+*.tsbuildinfo
+
+# ----- Environment -----
+.env
+.env.local
+.env.production
+.env.staging
+!.env.example
+
+# ----- Dataset (large files) -----
+r4.2/
+dataset/raw/
+dataset/processed/
+dataset/features/
+dataset/graphs/
+*.csv
+!dataset/metadata/*.csv
+
+# ----- AI / Model Artifacts -----
+ai/checkpoints/*.pt
+ai/checkpoints/*.pth
+ai/checkpoints/*.onnx
+ai/checkpoints/*.bin
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+
+# ----- Logs -----
+logs/
+*.log
+
+# ----- Docker -----
+.docker/
+
+# ----- Reports (generated) -----
+reports/data_quality/*
+reports/model_performance/*
+reports/security_audits/*
+
+# ----- OS -----
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ----- Jupyter -----
+.ipynb_checkpoints/
+notebooks/*.nbconvert.*
+
+# ----- Graphs & Exports -----
+*.graphml
+*.cypher
+graph/exporters/

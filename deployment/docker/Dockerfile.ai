@@ -1,0 +1,28 @@
+# =============================================================================
+# AI Module Dockerfile — GPU-Ready
+# =============================================================================
+FROM python:3.12-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install system deps
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc g++ && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python deps
+COPY pyproject.toml .
+RUN pip install --no-cache-dir -e ".[torch]"
+
+COPY ai/ ./ai/
+COPY graph/ ./graph/
+COPY configs/ ./configs/
+
+# Create non-root user
+RUN groupadd -r aiuser && useradd -r -g aiuser aiuser
+USER aiuser
+
+CMD ["python", "-m", "ai.training.trainer"]

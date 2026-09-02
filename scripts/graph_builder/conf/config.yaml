@@ -1,0 +1,36 @@
+paths:
+  base_dir: "C:/Users/HP/Desktop/InsiderThreat"
+  processed_dir: "${paths.base_dir}/dataset/processed"
+  features_dir: "${paths.base_dir}/features"
+  entities_dir: "${paths.base_dir}/entities"
+  
+  # Graph outputs
+  graph_base: "${paths.base_dir}/graph"
+  nodes_dir: "${paths.graph_base}/nodes"
+  edges_dir: "${paths.graph_base}/edges"
+  snapshots_dir: "${paths.graph_base}/snapshots"
+  analytics_dir: "${paths.graph_base}/analytics"
+  validation_dir: "${paths.graph_base}/validation"
+  exporters_dir: "${paths.graph_base}/exporters"
+  visualizations_dir: "${paths.graph_base}/visualizations"
+  schemas_dir: "${paths.graph_base}/schemas"
+  reports_dir: "${paths.graph_base}/reports"
+  logs_dir: "${paths.base_dir}/logs"
+
+options:
+  max_edges_in_memory: 500000
+  generate_visualizations: true
+
+modules:
+  node_creation: true
+  edge_creation: true
+  temporal_modeling: true
+  snapshots: true
+  node_features: true
+  edge_features: true
+  schema_generation: true
+  validation: true
+  analytics: true
+  storage_export: true
+  visualization: true
+  reporting: true

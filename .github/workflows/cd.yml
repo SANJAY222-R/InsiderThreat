@@ -1,0 +1,24 @@
+# =============================================================================
+# CD Pipeline — Deploy on merge to main
+# =============================================================================
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: |
+          docker-compose -f deployment/docker-compose.yml build
+
+      # TODO: Push to container registry
+      # TODO: Deploy to staging/production
+      - name: Deploy notification
+        run: echo "🚀 Deployment triggered for commit ${{ github.sha }}"

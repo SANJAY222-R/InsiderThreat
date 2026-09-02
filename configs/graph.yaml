@@ -1,0 +1,61 @@
+# =============================================================================
+# Graph Construction Configuration
+# =============================================================================
+
+graph:
+  # Temporal settings
+  temporal:
+    window_size_hours: 24
+    slide_step_hours: 6
+    snapshot_interval: "daily"  # daily, hourly, weekly
+
+  # Node construction
+  nodes:
+    user:
+      features:
+        - role
+        - department
+        - psychometric_scores
+        - avg_logon_hour
+        - device_usage_frequency
+    pc:
+      features:
+        - is_shared
+        - assigned_user_count
+    email:
+      features:
+        - size
+        - attachment_count
+        - recipient_count
+        - topic_embedding
+    file:
+      features:
+        - file_type
+        - topic_embedding
+    url:
+      features:
+        - domain
+        - topic_embedding
+
+  # Edge construction
+  edges:
+    include_self_loops: false
+    temporal_encoding: true
+    edge_features:
+      - timestamp
+      - duration
+      - frequency
+
+  # Graph limits
+  limits:
+    max_nodes_per_type: 100000
+    max_edges: 5000000
+    subgraph_max_hops: 3
+
+  # Neo4j settings
+  neo4j:
+    batch_size: 10000
+    create_indexes: true
+    constraints:
+      - unique_user_id
+      - unique_pc_id

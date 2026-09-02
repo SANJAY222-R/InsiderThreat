@@ -1,0 +1,86 @@
+version: '1.0'
+entities:
+- type: User
+  description: Enterprise employee or contractor
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  - name: raw_id
+    type: string
+    description: Original ID from raw logs
+  - name: standard_id
+    type: string
+    description: Cleaned ID
+  logical_relationships:
+  - source: User
+    target: Host
+    relation: LOGS_ON
+    cardinality: 1:N
+  - source: User
+    target: File
+    relation: ACCESSES
+    cardinality: 1:N
+  - source: User
+    target: Email
+    relation: SENDS
+    cardinality: 1:N
+- type: Host
+  description: Enterprise workstation or server
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  - name: raw_id
+    type: string
+    description: Original PC name
+  logical_relationships:
+  - source: Host
+    target: USB
+    relation: CONNECTS
+    cardinality: 1:N
+- type: File
+  description: Enterprise file or document
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  - name: raw_id
+    type: string
+    description: Original filename
+  logical_relationships: []
+- type: USB
+  description: Removable media device
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  logical_relationships: []
+- type: Email
+  description: Email address inside or outside enterprise
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  - name: domain
+    type: string
+    description: Extracted domain
+  logical_relationships:
+  - source: Email
+    target: Domain
+    relation: BELONGS_TO
+    cardinality: N:1
+- type: Domain
+  description: Network domain extracted from URLs or emails
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  logical_relationships: []
+- type: Website
+  description: Web URL accessed via HTTP
+  attributes:
+  - name: enterprise_id
+    type: string
+    description: Unique global ID
+  logical_relationships: []

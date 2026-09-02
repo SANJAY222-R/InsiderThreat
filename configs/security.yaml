@@ -1,0 +1,61 @@
+# =============================================================================
+# Security Configuration
+# =============================================================================
+
+security:
+  # JWT settings
+  jwt:
+    algorithm: "HS256"
+    access_token_expire_minutes: 30
+    refresh_token_expire_days: 7
+    issuer: "insider-threat-detection"
+    audience: "insider-threat-api"
+
+  # Password policy
+  password:
+    min_length: 12
+    require_uppercase: true
+    require_lowercase: true
+    require_digit: true
+    require_special: true
+    max_age_days: 90
+    history_count: 5
+
+  # Rate limiting
+  rate_limit:
+    enabled: true
+    default_limit: "60/minute"
+    auth_limit: "10/minute"
+    prediction_limit: "30/minute"
+
+  # CORS
+  cors:
+    allow_origins:
+      - "http://localhost:5173"
+    allow_methods:
+      - "GET"
+      - "POST"
+      - "PUT"
+      - "DELETE"
+      - "PATCH"
+    allow_headers:
+      - "Authorization"
+      - "Content-Type"
+      - "X-Correlation-ID"
+    allow_credentials: true
+
+  # Session
+  session:
+    max_concurrent: 3
+    idle_timeout_minutes: 30
+    absolute_timeout_hours: 8
+
+  # Audit
+  audit:
+    enabled: true
+    log_request_body: false
+    log_response_body: false
+    sensitive_fields:
+      - password
+      - token
+      - secret

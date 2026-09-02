@@ -1,0 +1,29 @@
+paths:
+  base_dir: "C:/Users/HP/Desktop/InsiderThreat"
+  processed_dir: "${paths.base_dir}/dataset/processed"
+  features_dir: "${paths.base_dir}/features"
+  entities_dir: "${paths.base_dir}/entities"
+  schemas_dir: "${paths.base_dir}/schemas"
+  reports_dir: "${paths.base_dir}/reports/entities"
+  logs_dir: "${paths.base_dir}/logs"
+  metadata_dir: "${paths.base_dir}/metadata"
+  docs_dir: "${paths.base_dir}/documentation/entities"
+
+options:
+  resolution_strategy: "exact_match"
+  generate_reports: true
+  enable_validation: true
+
+modules:
+  identification: true
+  standardization: true
+  resolution: true
+  attributes: true
+  profiling: true
+  knowledge_model: true
+  node_schemas: true
+  metadata: true
+  validation: true
+  documentation: true
+  export: true
+  recommendations: true

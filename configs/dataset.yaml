@@ -1,0 +1,51 @@
+# =============================================================================
+# Dataset Configuration — CERT Insider Threat r4.2
+# =============================================================================
+
+dataset:
+  name: "CERT Insider Threat Dataset"
+  version: "r4.2"
+  source: "Carnegie Mellon University CERT Division"
+  description: "Synthetic enterprise log data with embedded insider threat scenarios"
+
+  # File paths (relative to project root)
+  paths:
+    raw: "./r4.2"
+    processed: "./dataset/processed"
+    features: "./dataset/features"
+    graphs: "./dataset/graphs"
+    metadata: "./dataset/metadata"
+
+  # Raw data files
+  files:
+    logon: "logon.csv"
+    device: "device.csv"
+    email: "email.csv"
+    http: "http.csv"
+    file: "file.csv"
+    psychometric: "psychometric.csv"
+    ldap_dir: "LDAP/"
+
+  # Dataset statistics
+  statistics:
+    num_users: 1000
+    num_shared_machines: 100
+    date_range:
+      start: "2009-12-01"
+      end: "2011-05-31"
+    num_insider_threats: 2
+    ldap_snapshots: 18
+
+  # Processing settings
+  processing:
+    chunk_size: 100000
+    date_format: "%m/%d/%Y %H:%M:%S"
+    encoding: "utf-8"
+
+  # Train/val/test split
+  splits:
+    train_ratio: 0.7
+    val_ratio: 0.15
+    test_ratio: 0.15
+    stratify: true
+    temporal_split: true  # Split by time, not random

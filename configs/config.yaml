@@ -1,0 +1,39 @@
+# =============================================================================
+# Insider Threat Detection System — Main Configuration
+# =============================================================================
+# This is the root Hydra configuration file.
+# Environment-specific overrides are in development.yaml / production.yaml.
+# =============================================================================
+
+defaults:
+  - _self_
+  - override /env: development
+
+app:
+  name: "InsiderThreatDetection"
+  version: "0.1.0"
+  description: "Temporal Heterogeneous Graph Learning for Explainable Insider Threat Detection"
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+
+database:
+  url: "sqlite:///./data/insider_threat.db"
+  echo: false
+  pool_size: 5
+  max_overflow: 10
+
+dataset:
+  raw_path: "./r4.2"
+  processed_path: "./dataset/processed"
+  features_path: "./dataset/features"
+  graphs_path: "./dataset/graphs"
+
+paths:
+  logs: "./logs"
+  reports: "./reports"
+  checkpoints: "./ai/checkpoints"
+  configs: "./configs"

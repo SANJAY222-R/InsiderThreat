@@ -1,0 +1,17 @@
+{
+  "node_types": [
+    "Files",
+    "Emails",
+    "Hosts",
+    "Users",
+    "Usbs",
+    "Domains"
+  ],
+  "edge_types": [
+    "LOGOUT_FROM",
+    "VISIT_WEBSITE",
+    "REMOVE_USB",
+    "SEND_EMAIL",
+    "ACCESS_FILE"
+  ]
+}
