@@ -1,38 +1,38 @@
-"""
-Alert Pydantic Schemas
-======================
-
-Request/response models for alert endpoints.
-Phase 0: Schema stubs.
-"""
-
 from datetime import datetime
-from pydantic import BaseModel
+
+from pydantic import BaseModel, ConfigDict
 
 __all__ = ["AlertCreate", "AlertUpdate", "AlertResponse"]
 
 
 class AlertCreate(BaseModel):
-    """Schema for creating an alert."""
-    prediction_id: int
-    severity: str = "warning"
-    notes: str = ""
-
-
-class AlertUpdate(BaseModel):
-    """Schema for updating alert status."""
-    status: str | None = None
-    assigned_to: int | None = None
+    employee_id: str
+    prediction_id: int | None = None
+    severity: str = "medium"
+    title: str
+    description: str | None = None
     notes: str | None = None
 
 
+class AlertUpdate(BaseModel):
+    status: str | None = None
+    assigned_to: str | None = None
+    notes: str | None = None
+    severity: str | None = None
+
+
 class AlertResponse(BaseModel):
-    """Schema for alert API responses."""
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
-    prediction_id: int
+    prediction_id: int | None = None
+    employee_id: str
     severity: str
     status: str
-    assigned_to: int | None
-    notes: str
+    assigned_to: str | None = None
+    title: str
+    description: str | None = None
+    notes: str | None = None
     created_at: datetime
-    resolved_at: datetime | None
+    updated_at: datetime | None = None
+    resolved_at: datetime | None = None

@@ -1,26 +1,12 @@
-"""
-Centralized Logging Configuration
-==================================
-
-Loguru-based logging with structured output and multiple sinks.
-
-Supports:
-    - Application logs  → logs/app/
-    - Training logs     → logs/training/
-    - Prediction logs   → logs/predictions/
-    - API logs          → logs/api/
-    - Security logs     → logs/security/
-    - Error logs        → logs/errors/
-
-Phase 0: Configuration stubs. Logger setup for future phases.
-"""
-
+import sys
 from pathlib import Path
-from typing import Any
+
+from loguru import logger
+
+from backend.app.core.config import get_settings
 
 __all__ = ["setup_logging", "get_logger"]
 
-# Log categories and their subdirectories
 LOG_CATEGORIES: dict[str, str] = {
     "app": "app",
     "training": "training",
@@ -30,46 +16,44 @@ LOG_CATEGORIES: dict[str, str] = {
     "error": "errors",
 }
 
+_configured = False
 
-def setup_logging(
-    log_dir: str | Path = "./logs",
-    log_level: str = "DEBUG",
-    json_output: bool = False,
-) -> None:
-    """
-    Configure centralized logging with Loguru.
 
-    Creates log directories and configures file + console sinks
-    for each log category.
+def setup_logging() -> None:
+    global _configured
+    if _configured:
+        return
 
-    Args:
-        log_dir: Root directory for log files.
-        log_level: Minimum log level (DEBUG, INFO, WARNING, ERROR, CRITICAL).
-        json_output: If True, output structured JSON logs.
+    settings = get_settings()
+    log_path = Path(settings.log_dir)
+    level = settings.log_level.upper()
 
-    TODO (Phase 1):
-        - Configure Loguru sinks for each category
-        - Add log rotation (daily, 100MB max)
-        - Add log retention (30 days)
-        - Add structured JSON serialization
-        - Add correlation ID injection
-        - Intercept stdlib logging
-    """
-    log_path = Path(log_dir)
+    logger.remove()
+
+    logger.add(
+        sys.stderr,
+        level=level,
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>",
+        colorize=True,
+    )
+
     for category, subdir in LOG_CATEGORIES.items():
-        (log_path / subdir).mkdir(parents=True, exist_ok=True)
+        category_dir = log_path / subdir
+        category_dir.mkdir(parents=True, exist_ok=True)
+        logger.add(
+            str(category_dir / "{time:YYYY-MM-DD}.log"),
+            level=level if category != "error" else "ERROR",
+            rotation="100 MB",
+            retention="30 days",
+            compression="gz",
+            filter=lambda record, cat=category: record["extra"].get("category") == cat,
+            serialize=settings.is_production,
+        )
+
+    _configured = True
 
 
-def get_logger(name: str = "app") -> Any:
-    """
-    Get a logger instance for the specified category.
-
-    Args:
-        name: Logger category name (app, training, prediction, api, security, error).
-
-    Returns:
-        Configured Loguru logger.
-
-    TODO (Phase 1): Return bound Loguru logger with category context.
-    """
-    raise NotImplementedError("Phase 1: Loguru logger setup")
+def get_logger(name: str = "app") -> logger.__class__:
+    if not _configured:
+        setup_logging()
+    return logger.bind(category=name)

@@ -1,30 +1,19 @@
+from sqlalchemy import Column, Integer, String, DateTime, JSON
+from sqlalchemy.sql import func
 
-"""
-Audit Log ORM Model
-====================
-
-Immutable audit trail of system actions.
-
-Phase 0: Schema stub only.
-"""
+from backend.app.database.database import Base
 
 __all__ = ["AuditLog"]
 
 
-class AuditLog:
-    """
-    Audit log database model.
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
 
-    Attributes:
-        id: Primary key.
-        user_id: Actor user ID.
-        action: Action performed (login, predict, export, config_change).
-        resource_type: Resource type affected.
-        resource_id: Specific resource ID.
-        details: JSON action details.
-        ip_address: Client IP.
-        timestamp: Action timestamp.
-
-    TODO (Phase 2): Implement with SQLAlchemy mapped columns.
-    """
-    pass
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String, nullable=True, index=True)
+    action = Column(String(100), nullable=False, index=True)
+    resource_type = Column(String(100), nullable=True)
+    resource_id = Column(String(255), nullable=True)
+    details = Column(JSON, default=dict)
+    ip_address = Column(String(45), nullable=True)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now(), nullable=False, index=True)

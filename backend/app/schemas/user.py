@@ -1,41 +1,47 @@
-"""
-User Pydantic Schemas
-=====================
+from datetime import datetime
 
-Request/response models for user endpoints.
-Phase 0: Schema stubs.
-"""
+from pydantic import BaseModel, ConfigDict
 
-from pydantic import BaseModel, EmailStr
-
-__all__ = ["UserCreate", "UserUpdate", "UserResponse", "UserLogin"]
+__all__ = ["UserCreate", "UserUpdate", "UserResponse", "UserLogin", "Token"]
 
 
 class UserCreate(BaseModel):
-    """Schema for creating a new user."""
     username: str
-    email: str  # TODO: Use EmailStr with email-validator installed
+    email: str | None = None
     password: str
-    role: str = "viewer"
+    full_name: str | None = None
+    role: str = "analyst"
+    department: str | None = None
 
 
 class UserUpdate(BaseModel):
-    """Schema for updating user details."""
     email: str | None = None
+    full_name: str | None = None
     role: str | None = None
+    department: str | None = None
     is_active: bool | None = None
 
 
 class UserResponse(BaseModel):
-    """Schema for user API responses."""
-    id: int
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
     username: str
-    email: str
+    email: str | None = None
+    full_name: str | None = None
     role: str
+    department: str | None = None
     is_active: bool
+    created_at: datetime
+    last_login: datetime | None = None
 
 
 class UserLogin(BaseModel):
-    """Schema for login request."""
     username: str
     password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    refresh_token: str | None = None

@@ -1,23 +1,39 @@
-/**
- * User Type Definitions
- */
-
 export interface User {
-  id: number;
+  id: string;
   username: string;
-  email: string;
-  role: "admin" | "analyst" | "auditor" | "viewer";
-  isActive: boolean;
+  email?: string | null;
+  full_name?: string | null;
+  role: "admin" | "analyst" | "auditor" | "viewer" | string;
+  department?: string | null;
+  is_active: boolean;
+  created_at?: string;
+  last_login?: string | null;
 }
 
 export interface UserCreate {
   username: string;
-  email: string;
   password: string;
-  role: string;
+  email?: string;
+  full_name?: string;
+  role?: string;
+  department?: string;
+}
+
+export interface UserUpdate {
+  email?: string;
+  full_name?: string;
+  role?: string;
+  department?: string;
+  is_active?: boolean;
 }
 
 export interface UserLogin {
   username: string;
   password: string;
+}
+
+export interface AuthToken {
+  access_token: string;
+  token_type: string;
+  refresh_token?: string;
 }

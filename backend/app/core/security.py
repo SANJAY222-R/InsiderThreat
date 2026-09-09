@@ -1,14 +1,10 @@
-"""
-Security Utilities
-==================
-
-JWT token creation/validation and password hashing.
-
-Phase 0: Interface definitions only. No implementation.
-"""
-
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from typing import Any
+
+from jose import jwt, JWTError
+from passlib.context import CryptContext
+
+from backend.app.core.config import get_settings
 
 __all__ = [
     "create_access_token",
@@ -18,82 +14,39 @@ __all__ = [
     "verify_password",
 ]
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def create_access_token(subject: str, expires_delta: int | None = None) -> str:
-    """
-    Create a JWT access token.
 
-    Args:
-        subject: Token subject (usually user ID).
-        expires_delta: Custom expiry in minutes.
-
-    Returns:
-        Encoded JWT string.
-
-    TODO (Phase 2): Implement with python-jose.
-    """
-    raise NotImplementedError("Phase 2: JWT implementation")
+def create_access_token(subject: str, extra: dict[str, Any] | None = None, expires_delta: int | None = None) -> str:
+    settings = get_settings()
+    expire_minutes = expires_delta or settings.jwt_access_token_expire_minutes
+    expire = datetime.now(timezone.utc) + timedelta(minutes=expire_minutes)
+    to_encode: dict[str, Any] = {"sub": subject, "exp": expire, "type": "access"}
+    if extra:
+        to_encode.update(extra)
+    return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
 
 
 def create_refresh_token(subject: str) -> str:
-    """
-    Create a JWT refresh token with extended expiry.
-
-    Args:
-        subject: Token subject (usually user ID).
-
-    Returns:
-        Encoded JWT refresh token string.
-
-    TODO (Phase 2): Implement with python-jose.
-    """
-    raise NotImplementedError("Phase 2: JWT implementation")
+    settings = get_settings()
+    expire = datetime.now(timezone.utc) + timedelta(days=settings.jwt_refresh_token_expire_days)
+    to_encode = {"sub": subject, "exp": expire, "type": "refresh"}
+    return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
 
 
 def verify_token(token: str) -> dict[str, Any]:
-    """
-    Verify and decode a JWT token.
-
-    Args:
-        token: Encoded JWT string.
-
-    Returns:
-        Decoded token payload.
-
-    Raises:
-        AuthenticationError: If token is invalid or expired.
-
-    TODO (Phase 2): Implement with python-jose.
-    """
-    raise NotImplementedError("Phase 2: JWT implementation")
+    settings = get_settings()
+    try:
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+        return payload
+    except JWTError as e:
+        from backend.app.core.exceptions import AuthenticationError
+        raise AuthenticationError(message=str(e))
 
 
 def hash_password(password: str) -> str:
-    """
-    Hash a plaintext password using bcrypt.
-
-    Args:
-        password: Plaintext password.
-
-    Returns:
-        Bcrypt hash string.
-
-    TODO (Phase 2): Implement with passlib.
-    """
-    raise NotImplementedError("Phase 2: Password hashing")
+    return pwd_context.hash(password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """
-    Verify a password against its hash.
-
-    Args:
-        plain_password: Plaintext password to verify.
-        hashed_password: Stored bcrypt hash.
-
-    Returns:
-        True if password matches.
-
-    TODO (Phase 2): Implement with passlib.
-    """
-    raise NotImplementedError("Phase 2: Password verification")
+    return pwd_context.verify(plain_password, hashed_password)
