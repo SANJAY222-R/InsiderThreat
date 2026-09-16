@@ -644,48 +644,7 @@ If port 8000 or 5173 is already in use by another process:
   # From project root
   pytest tests/ -v --tb=short
 
-✻ Waiting for 1 background agent to finish
-
-● Agent "Scan all backend/app Python files for bugs" failed: Agent terminated early due to an API error: API Error:
-Request rejected (429) · [antigravity/claude-sonnet-4-6] All antigravity accounts have exhausted their quota (reset
-after 5m) (error type rate_limit, HTTP 429, model sent to the API: antigravity/claude-sonnet-4-6)
-
-● API Error: Request rejected (429) · [antigravity/claude-sonnet-4-6] All antigravity accounts have exhausted
-  their quota (reset after 5m)
-
-✻ Cooked for 9m 43s · done 4:58 AM
-
-❯ /model kimi-coding/k3
-  ⎿  API error: 502 {"error":{"message":"[kimi-coding/k3] upstream returned an empty response without usable
-     output","type":"upstream_response_error","code":"upstream_empty_response"}}
-
-❯ /model gemini-3.7-flash-medium
-  ⎿  Set model to gemini-3.7-flash-medium and saved as your default for new sessions
-
-❯ continue and complete the previous work
-
-  Thought for 13s (ctrl+o to expand)
-
-● Bash(python3 -m py_compile $(find backend ai -name "*.py"))
-  ⎿  backend/venv/Lib/site-packages/passlib/tests/test_apache.py:210: SyntaxWarning: invalid escape sequence '\('
-       with self.assertWarningList("update\(\) is deprecated"):
-     backend/venv/Lib/site-packages/passlib/tests/test_apache.py:280: SyntaxWarning: invalid escape sequence '\('
-     … +21 lines (ctrl+o to expand)
-
-● Bash(python3 -m py_compile $(find backend/app ai -name "*.py"))
-  ⎿  (No output)
-
-● Reading 2 files… (ctrl+o to expand)
-  ⎿  $ cat /mnt/c/Users/HP/Desktop/InsiderThreat/backend/app/api/v1/endpoints/reports.py && echo "=== SETTINGS ===" &&
-     cat /mnt/c/Users/HP/Desktop/InsiderThreat/backend/app/api/v1/endpoints/settings.py && echo "=== EXPLAINABILITY ==="
-     && cat /mnt/c/Users/HP/Desktop/InsiderThreat/backend/app/api/v1/endpo…
-
-· Considering… (4m 53s · ↓ 733 tokens)
-  ⎿  Tip: /loop runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling
-     status.
-
-  /btw update the working.md with this How to Run the Application Prerequisites - Python 3.12+ - Node.js 18+ 1. Install…
-
+# update the working.md with this How to Run the Application Prerequisites - Python 3.12+ - Node.js 18+ 1. Install…
 
     # List predictions
     curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/v1/predictions/
