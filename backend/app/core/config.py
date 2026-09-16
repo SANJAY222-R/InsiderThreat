@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     neo4j_password: str = "changeme"
     neo4j_database: str = "insiderthreat"
 
-    jwt_secret_key: str = secrets.token_urlsafe(64)
+    jwt_secret_key: str = "soc-nexus-super-secure-jwt-secret-key-32-chars-minimum-prod"
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 30
     jwt_refresh_token_expire_days: int = 7

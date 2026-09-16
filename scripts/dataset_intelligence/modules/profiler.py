@@ -3,7 +3,7 @@ import pandas as pd
 from config import REPORTS_DIR, logger
 
 class DataProfiler:
-    def run(self, inventory_df):
+    def run(self, inventory_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
         logger.info("Module 4: Data Profiling")
         all_stats = {}
         

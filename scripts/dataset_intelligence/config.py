@@ -32,7 +32,7 @@ ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
 
-def get_csv_files():
+def get_csv_files() -> list[Path]:
     files = list(RAW_DIR.glob("*.csv"))
     if not files:
         # Fallback to r4.2 if symlink failed

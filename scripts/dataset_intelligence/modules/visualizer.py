@@ -3,7 +3,7 @@ import plotly.express as px
 from config import VIZ_DIR, logger
 
 class DataVisualizer:
-    def run(self, inventory_df, profiling_stats):
+    def run(self, inventory_df: pd.DataFrame, profiling_stats: dict[str, pd.DataFrame]) -> None:
         logger.info("Module 10: Visualization")
         
         try:

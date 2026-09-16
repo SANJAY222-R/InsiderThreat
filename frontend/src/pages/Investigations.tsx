@@ -5,10 +5,18 @@ import { alertService } from "../services/alertService";
 import type { Prediction } from "../types/prediction";
 import type { Alert } from "../types/alert";
 
+const SAMPLE_ENTITIES = [
+  { id: "MOH0273", label: "MOH0273 (Exfiltration Risk)", threat: "CRITICAL" },
+  { id: "LAP0338", label: "LAP0338 (Email Anomaly)", threat: "HIGH" },
+  { id: "CEL0561", label: "CEL0561 (Auth Spike)", threat: "HIGH" },
+  { id: "HPH0075", label: "HPH0075 (USB Connect)", threat: "MEDIUM" },
+  { id: "ASD0577", label: "ASD0577 (Normal Worker)", threat: "LOW" },
+];
+
 const Investigations: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const initialUser = searchParams.get("user") || "U1234";
+  const initialUser = searchParams.get("user") || "MOH0273";
 
   const [employeeId, setEmployeeId] = useState(initialUser);
   const [queryInput, setQueryInput] = useState(initialUser);
@@ -26,17 +34,9 @@ const Investigations: React.FC = () => {
       if (preds.status === "fulfilled" && preds.value.length > 0) {
         setPrediction(preds.value[0]);
       } else {
-        // Create an evaluation or set default view
-        setPrediction({
-          id: 1,
-          employee_id: id,
-          risk_score: 85.0,
-          threat_level: "HIGH",
-          confidence: 0.92,
-          explanation: {},
-          model_version: "1.0.0",
-          created_at: new Date().toISOString(),
-        });
+        // Run on-demand prediction for this user
+        const newPred = await predictionService.predict({ employee_id: id });
+        setPrediction(newPred);
       }
 
       if (alerts.status === "fulfilled") {
@@ -44,8 +44,6 @@ const Investigations: React.FC = () => {
       }
     } catch {
       // Fallback
-    } finally {
-      // Completed
     }
   };
 
@@ -78,7 +76,7 @@ const Investigations: React.FC = () => {
   const isHighRisk = riskScore >= 75 || threatLevel === "HIGH" || threatLevel === "CRITICAL";
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+    <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">Behavioral Investigation</h1>
@@ -91,15 +89,38 @@ const Investigations: React.FC = () => {
             placeholder="Employee / User ID"
             value={queryInput}
             onChange={(e) => setQueryInput(e.target.value)}
-            className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 w-44"
+            className="bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-blue-500 w-44 font-mono"
           />
           <button
             type="submit"
-            className="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold px-4 py-2 rounded-xl transition border border-gray-700"
+            className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-md shadow-blue-500/20"
           >
             Lookup
           </button>
         </form>
+      </div>
+
+      {/* Sample Entity Chips */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px] whitespace-nowrap">
+          Quick Entities:
+        </span>
+        {SAMPLE_ENTITIES.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => {
+              setEmployeeId(s.id);
+              setQueryInput(s.id);
+            }}
+            className={`px-3 py-1.5 rounded-xl border text-xs font-mono transition whitespace-nowrap ${
+              employeeId === s.id
+                ? "bg-blue-600 text-white border-blue-400 font-bold shadow-md shadow-blue-500/20"
+                : "bg-gray-900/80 hover:bg-gray-800 text-gray-300 border-gray-800"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
       </div>
 
       {/* Target Entity Card */}
@@ -132,7 +153,7 @@ const Investigations: React.FC = () => {
                 {threatLevel} Threat
               </span>
             </div>
-            <p className="text-gray-400 text-sm mt-1">Status: Active Monitored Entity</p>
+            <p className="text-gray-400 text-sm mt-1">Status: Active Monitored Entity (CERT r4.2)</p>
           </div>
         </div>
 
@@ -214,6 +235,12 @@ const Investigations: React.FC = () => {
               className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold py-3 px-4 rounded-xl text-sm transition border border-gray-700 cursor-pointer text-center"
             >
               {isEvaluating ? "Computing Inference..." : "Re-evaluate Entity"}
+            </button>
+            <button
+              onClick={() => navigate(`/graph`)}
+              className="flex-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 font-semibold py-3 px-4 rounded-xl text-sm transition border border-blue-500/30 cursor-pointer text-center"
+            >
+              View in Graph
             </button>
             <button
               onClick={() => navigate(`/xai?id=${prediction?.id || 1}`)}

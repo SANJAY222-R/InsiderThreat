@@ -2,13 +2,13 @@
  * Graph Type Definitions
  */
 
-export type NodeType = "user" | "device" | "email" | "file" | "url" | "pc";
+export type NodeType = "user" | "device" | "email" | "file" | "url" | "pc" | "usb" | "unknown";
 
 export interface GraphNode {
   id: string;
-  type: NodeType;
+  type: NodeType | string;
   label: string;
-  properties: Record<string, unknown>;
+  properties?: Record<string, any>;
 }
 
 export interface GraphEdge {
@@ -16,12 +16,21 @@ export interface GraphEdge {
   source: string;
   target: string;
   type: string;
+  label?: string;
   timestamp?: string;
-  properties: Record<string, unknown>;
+  properties?: Record<string, any>;
 }
 
 export interface GraphData {
   nodes: GraphNode[];
   edges: GraphEdge[];
-  metadata: Record<string, unknown>;
+  metadata?: Record<string, any>;
+}
+
+export interface SampleEntity {
+  id: string;
+  label: string;
+  type: string;
+  role?: string;
+  department?: string;
 }

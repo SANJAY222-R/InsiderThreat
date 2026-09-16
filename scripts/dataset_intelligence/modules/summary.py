@@ -2,7 +2,7 @@ import pandas as pd
 from config import REPORTS_DIR, logger
 
 class SummaryGenerator:
-    def run(self, inventory_df, schema_df, profiling_stats):
+    def run(self, inventory_df: pd.DataFrame, schema_df: pd.DataFrame, profiling_stats: dict[str, pd.DataFrame]) -> None:
         logger.info("Module 11 & 12: Dataset Summary and Recommendations")
         
         total_records = inventory_df["Number of Records"].sum()

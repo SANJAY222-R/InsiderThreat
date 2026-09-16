@@ -2,7 +2,7 @@ import pandas as pd
 from config import REPORTS_DIR, logger
 
 class QualityAnalysis:
-    def run(self, inventory_df):
+    def run(self, inventory_df: pd.DataFrame) -> None:
         logger.info("Module 9: Data Quality Analysis")
         # For a massive dataset, full regex checking of emails on 14GB is slow.
         # We will report high level anomalies observed from profiling, or simple checks.

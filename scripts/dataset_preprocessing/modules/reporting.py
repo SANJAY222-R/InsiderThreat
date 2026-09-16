@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import Any
 from config import REPORTS_DIR
 import logging
 
@@ -7,7 +8,7 @@ logger = logging.getLogger("DatasetPreprocessing")
 class ReportGenerator:
     """Module 12: Report Generation"""
     
-    def generate(self, logs: list):
+    def generate(self, logs: list[dict[str, Any]]) -> None:
         logger.info("Generating Preprocessing Reports...")
         
         # Flatten context

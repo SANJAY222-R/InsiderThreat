@@ -1,4 +1,5 @@
 import polars as pl
+from typing import Any
 from .base_module import BaseModule
 from config import PROCESSED_DIR
 import logging
@@ -8,10 +9,10 @@ logger = logging.getLogger("DatasetPreprocessing")
 class DataExporter(BaseModule):
     """Module 11: Export Clean Data"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("DataExporter")
         
-    def run(self, df: pl.DataFrame, context: dict) -> pl.DataFrame:
+    def run(self, df: pl.DataFrame, context: dict[str, Any]) -> pl.DataFrame:
         filename = context.get("filename", "unknown.csv")
         out_path = PROCESSED_DIR / f"clean_{filename}"
         

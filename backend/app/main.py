@@ -4,6 +4,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from backend.app.core.config import get_settings
 from backend.app.core.logging import setup_logging
 from backend.app.database.database import engine, Base
+from backend.app.database.seed import seed_db
 from backend.app.middleware.cors import setup_cors
 from backend.app.middleware.error_handler import setup_error_handler
 from backend.app.middleware.logging import RequestLoggingMiddleware
@@ -18,6 +19,11 @@ settings = get_settings()
 setup_logging()
 
 Base.metadata.create_all(bind=engine)
+try:
+    seed_db()
+except Exception as e:
+    import logging
+    logging.getLogger(__name__).warning(f"Database seeding failed (non-fatal): {e}")
 
 app = FastAPI(
     title="Enterprise Insider Threat Detection API",

@@ -5,13 +5,13 @@ from pathlib import Path
 from config import get_csv_files, REPORTS_DIR, logger
 
 class DatasetDiscovery:
-    def __init__(self):
+    def __init__(self) -> None:
         self.files = get_csv_files()
         
-    def get_line_count(self, file_path):
+    def get_line_count(self, file_path: Path | str) -> int:
         try:
             # Polars is extremely fast at getting the row count
-            return pl.scan_csv(file_path).select(pl.len()).collect().item()
+            return int(pl.scan_csv(file_path).select(pl.len()).collect().item())
         except Exception as e:
             logger.warning(f"Polars failed to count lines for {file_path}, falling back to chunking: {e}")
             count = 0
@@ -19,14 +19,14 @@ class DatasetDiscovery:
                 count += len(chunk)
             return count
 
-    def get_col_count(self, file_path):
+    def get_col_count(self, file_path: Path | str) -> int:
         try:
             df = pd.read_csv(file_path, nrows=0)
             return len(df.columns)
         except Exception:
             return 0
 
-    def run(self):
+    def run(self) -> pd.DataFrame:
         logger.info("Module 1: Automatic Dataset Discovery")
         inventory = []
         

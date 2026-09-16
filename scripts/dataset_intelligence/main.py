@@ -17,7 +17,7 @@ from modules.quality import QualityAnalysis
 from modules.visualizer import DataVisualizer
 from modules.summary import SummaryGenerator
 
-def main():
+def main() -> None:
     logger.info("Starting Dataset Intelligence Module - Phase 1")
     
     try:

@@ -3,7 +3,7 @@ import pandas as pd
 from config import REPORTS_DIR, logger
 
 class BehaviourProfiler:
-    def run(self, inventory_df):
+    def run(self, inventory_df: pd.DataFrame) -> None:
         logger.info("Module 8: User Behaviour Profiling")
         
         user_profiles = {}

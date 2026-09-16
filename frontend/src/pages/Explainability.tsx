@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { predictionService, type ExplanationResponse } from "../services/predictionService";
 
 const Explainability: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialPredId = searchParams.get("id") ? parseInt(searchParams.get("id")!, 10) : 1;
 
   const [predictionId, setPredictionId] = useState<number>(initialPredId);
@@ -16,31 +17,28 @@ const Explainability: React.FC = () => {
       const resp = await predictionService.getExplanation(id);
       setData(resp);
     } catch {
-      // Set default fallback visualization
+      // Set realistic default visualization for MOH0273
       setData({
         prediction_id: id,
-        employee_id: "U1234",
-        risk_score: 88.5,
-        threat_level: "HIGH",
+        employee_id: "MOH0273",
+        risk_score: 94.2,
+        threat_level: "CRITICAL",
         explanation: {
           feature_importance: {
-            "After-Hours Login": 0.42,
-            "File Download Volume": 0.35,
-            "USB Device Access": 0.28,
-            "External Email Ratio": 0.15,
-            "Failed Auth Spike": 0.10,
+            "usb_insertion_count": 0.38,
+            "file_download_bytes_mb": 0.31,
+            "is_after_hours": 0.22,
+            "email_external_ratio": 0.09,
           },
           top_features: [
-            { name: "After-Hours Login", value: 0.42, direction: "above_normal" },
-            { name: "File Download Volume", value: 0.35, direction: "above_normal" },
-            { name: "USB Device Access", value: 0.28, direction: "above_normal" },
+            { name: "usb_insertion_count", value: 4.0, direction: "above_normal" },
+            { name: "file_download_bytes_mb", value: 850.0, direction: "above_normal" },
+            { name: "is_after_hours", value: 1.0, direction: "above_normal" },
           ],
           model_version: "1.0.0",
-          method: "Temporal Graph Attention",
+          method: "Temporal Graph Attention (THGNN)",
         },
       });
-    } finally {
-      // Completed
     }
   };
 
@@ -58,19 +56,19 @@ const Explainability: React.FC = () => {
 
   const featureImportanceList = data?.explanation?.feature_importance
     ? Object.entries(data.explanation.feature_importance).map(([feature, weight]) => ({
-        feature,
+        feature: feature.replace(/_/g, " "),
         weight: Number(weight),
       }))
     : [
-        { feature: "Session Duration", weight: 0.45 },
-        { feature: "After-Hours Login", weight: 0.35 },
-        { feature: "USB Insertion Count", weight: 0.15 },
-        { feature: "Dept Clearance", weight: -0.10 },
+        { feature: "USB Insertion Count", weight: 0.38 },
+        { feature: "File Download Volume", weight: 0.31 },
+        { feature: "After-Hours Activity", weight: 0.22 },
+        { feature: "External Email Ratio", weight: 0.09 },
       ];
 
-  const employee = data?.employee_id || "U1234";
-  const threatLevel = data?.threat_level || "HIGH";
-  const riskScore = data?.risk_score ?? 88.5;
+  const employee = data?.employee_id || "MOH0273";
+  const threatLevel = data?.threat_level || "CRITICAL";
+  const riskScore = data?.risk_score ?? 94.2;
 
   return (
     <div className="space-y-8 h-full overflow-auto pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -82,22 +80,31 @@ const Explainability: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSearch} className="flex gap-2">
-          <input
-            type="number"
-            min={1}
-            placeholder="Prediction ID"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            className="bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-sm text-white w-32 focus:outline-none focus:border-blue-500"
-          />
+        <div className="flex items-center gap-3">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <input
+              type="number"
+              min={1}
+              placeholder="Pred ID"
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              className="bg-gray-900 border border-gray-700 rounded-xl px-3 py-1.5 text-sm text-white w-28 focus:outline-none focus:border-blue-500 font-mono"
+            />
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-md shadow-blue-500/20"
+            >
+              Load
+            </button>
+          </form>
+
           <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-md shadow-blue-500/20"
+            onClick={() => navigate(`/investigations?user=${employee}`)}
+            className="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold px-4 py-2 rounded-xl transition border border-gray-700"
           >
-            Load Explanation
+            Investigate Entity
           </button>
-        </form>
+        </div>
       </div>
 
       <div className="bg-blue-900/10 backdrop-blur-md border border-blue-500/30 p-8 rounded-2xl relative overflow-hidden group hover:border-blue-500/50 transition-colors shadow-lg">
@@ -108,11 +115,11 @@ const Explainability: React.FC = () => {
           </svg>
           Natural Language Reasoning (Prediction #{predictionId})
         </h2>
-        <p className="text-gray-300 leading-relaxed text-lg">
-          User <strong className="text-white font-mono">{employee}</strong> was evaluated with risk score{" "}
+        <p className="text-gray-300 leading-relaxed text-base">
+          Target entity <strong className="text-white font-mono">{employee}</strong> was evaluated with risk score{" "}
           <strong className="text-white">{riskScore}/100</strong> and classified as{" "}
           <span
-            className={`px-2 py-0.5 rounded-md font-bold mx-1 ${
+            className={`px-2.5 py-0.5 rounded-md font-bold mx-1 ${
               threatLevel === "CRITICAL" || threatLevel === "HIGH"
                 ? "bg-red-500/20 text-red-400"
                 : "bg-yellow-500/20 text-yellow-400"
@@ -120,7 +127,7 @@ const Explainability: React.FC = () => {
           >
             {threatLevel} Risk
           </span>
-          . The attention mechanisms identified high anomaly variance across{" "}
+          . Temporal heterogeneous graph attention identified primary risk drivers across{" "}
           <span className="italic text-purple-300 mx-1">
             {featureImportanceList.slice(0, 3).map((f) => f.feature).join(", ")}
           </span>
@@ -137,9 +144,9 @@ const Explainability: React.FC = () => {
             Feature Attribution Weights
           </h2>
           <ResponsiveContainer width="100%" height="80%">
-            <BarChart layout="vertical" data={featureImportanceList} margin={{ left: 50, right: 20, bottom: 20 }}>
-              <XAxis type="number" stroke="#6B7280" tick={{ fill: "#9CA3AF" }} tickLine={false} axisLine={false} domain={[0, 1]} />
-              <YAxis dataKey="feature" type="category" stroke="#6B7280" tick={{ fill: "#9CA3AF", fontSize: 12 }} width={140} tickLine={false} axisLine={false} />
+            <BarChart layout="vertical" data={featureImportanceList} margin={{ left: 60, right: 20, bottom: 20 }}>
+              <XAxis type="number" stroke="#6B7280" tick={{ fill: "#9CA3AF" }} tickLine={false} axisLine={false} domain={[0, 0.5]} />
+              <YAxis dataKey="feature" type="category" stroke="#6B7280" tick={{ fill: "#9CA3AF", fontSize: 11 }} width={160} tickLine={false} axisLine={false} />
               <Tooltip
                 cursor={{ fill: "rgba(255,255,255,0.05)" }}
                 contentStyle={{ backgroundColor: "#111827", border: "1px solid #374151", borderRadius: "12px" }}

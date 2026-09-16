@@ -33,7 +33,7 @@ if not logger.handlers:
     logger.addHandler(fh)
     logger.addHandler(ch)
 
-def get_raw_csv_files():
+def get_raw_csv_files() -> list[Path]:
     files = list(RAW_DIR.glob("*.csv"))
     if not files:
         logger.warning("No CSVs found in dataset/raw. Checking r4.2 fallback.")

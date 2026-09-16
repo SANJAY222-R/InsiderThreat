@@ -1,4 +1,5 @@
 import polars as pl
+from typing import Any
 from .base_module import BaseModule
 import logging
 
@@ -7,10 +8,10 @@ logger = logging.getLogger("DatasetPreprocessing")
 class TypeStandardizer(BaseModule):
     """Module 7: Data Type Standardization"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("TypeStandardizer")
         
-    def run(self, df: pl.DataFrame, context: dict) -> pl.DataFrame:
+    def run(self, df: pl.DataFrame, context: dict[str, Any]) -> pl.DataFrame:
         logger.info("Standardizing data types to optimize memory.")
         
         exprs = []

@@ -1,4 +1,5 @@
 import polars as pl
+from typing import Any
 from .base_module import BaseModule
 import logging
 
@@ -7,10 +8,10 @@ logger = logging.getLogger("DatasetPreprocessing")
 class MissingValueHandler(BaseModule):
     """Module 4: Missing Value Handling"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("MissingValueHandler")
         
-    def run(self, df: pl.DataFrame, context: dict) -> pl.DataFrame:
+    def run(self, df: pl.DataFrame, context: dict[str, Any]) -> pl.DataFrame:
         missing_stats = {}
         for col in df.columns:
             null_count = df.select(pl.col(col).is_null().sum()).item()

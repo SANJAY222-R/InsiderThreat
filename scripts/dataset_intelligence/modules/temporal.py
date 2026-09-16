@@ -3,7 +3,7 @@ import pandas as pd
 from config import REPORTS_DIR, logger
 
 class TemporalAnalysis:
-    def run(self, inventory_df):
+    def run(self, inventory_df: pd.DataFrame) -> None:
         logger.info("Module 7: Temporal Analysis")
         
         temporal_stats = []

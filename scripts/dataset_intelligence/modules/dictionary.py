@@ -2,7 +2,7 @@ import pandas as pd
 from config import DICT_DIR, logger
 
 class DictionaryGenerator:
-    def run(self, schema_df, profiling_stats):
+    def run(self, schema_df: pd.DataFrame, profiling_stats: dict[str, pd.DataFrame]) -> None:
         logger.info("Module 3: Data Dictionary")
         dictionary_records = []
         

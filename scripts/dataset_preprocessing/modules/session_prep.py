@@ -1,4 +1,5 @@
 import polars as pl
+from typing import Any
 from .base_module import BaseModule
 import logging
 
@@ -7,10 +8,10 @@ logger = logging.getLogger("DatasetPreprocessing")
 class SessionPreparator(BaseModule):
     """Module 8: Session Preparation"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("SessionPreparator")
         
-    def run(self, df: pl.DataFrame, context: dict) -> pl.DataFrame:
+    def run(self, df: pl.DataFrame, context: dict[str, Any]) -> pl.DataFrame:
         cols = df.columns
         
         # We need user and some timestamp (UnixTimestamp generated in Module 5)

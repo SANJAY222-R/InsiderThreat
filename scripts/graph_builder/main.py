@@ -2,8 +2,9 @@
 import os
 import sys
 import logging
+from typing import cast
 from pathlib import Path
-from omegaconf import OmegaConf
+from omegaconf import DictConfig, OmegaConf
 import networkx as nx
 
 # Ensure modules are in path
@@ -19,7 +20,7 @@ from modules.export_visualize_report import GraphExporter, GraphVisualizer, Repo
 logger = logging.getLogger("GraphBuilder")
 logger.setLevel(logging.INFO)
 
-def setup_directories(cfg):
+def setup_directories(cfg: DictConfig) -> None:
     dirs = [
         cfg.paths.nodes_dir, cfg.paths.edges_dir, cfg.paths.snapshots_dir,
         cfg.paths.analytics_dir, cfg.paths.validation_dir, cfg.paths.exporters_dir,
@@ -29,8 +30,8 @@ def setup_directories(cfg):
     for d in dirs:
         Path(d).mkdir(parents=True, exist_ok=True)
 
-def main():
-    cfg = OmegaConf.load(BASE_DIR / "conf" / "config.yaml")
+def main() -> None:
+    cfg = cast(DictConfig, OmegaConf.load(BASE_DIR / "conf" / "config.yaml"))
     setup_directories(cfg)
     
     # Configure logging

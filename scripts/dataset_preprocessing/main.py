@@ -19,7 +19,7 @@ from modules.logging_engine import PreprocessingLogger
 from modules.export import DataExporter
 from modules.reporting import ReportGenerator
 
-def main():
+def main() -> None:
     logger.info("Starting Enterprise Data Cleaning and Preprocessing Pipeline (Phase 2)")
     
     files = get_raw_csv_files()

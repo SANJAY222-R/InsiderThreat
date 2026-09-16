@@ -3,7 +3,7 @@ import pandas as pd
 from config import REPORTS_DIR, logger
 
 class EntityDiscovery:
-    def run(self, inventory_df):
+    def run(self, inventory_df: pd.DataFrame) -> None:
         logger.info("Module 5 & 6: Entity and Relationship Discovery")
         
         # We will map standard entity columns based on common CERT dataset names

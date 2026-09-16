@@ -1,4 +1,5 @@
 import polars as pl
+from typing import Any
 from .base_module import BaseModule
 import logging
 
@@ -7,10 +8,10 @@ logger = logging.getLogger("DatasetPreprocessing")
 class TimestampStandardizer(BaseModule):
     """Module 5: Timestamp Standardization"""
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("TimestampStandardizer")
         
-    def run(self, df: pl.DataFrame, context: dict) -> pl.DataFrame:
+    def run(self, df: pl.DataFrame, context: dict[str, Any]) -> pl.DataFrame:
         # Detect timestamp column
         time_cols = [c for c in df.columns if "date" in c.lower() or "time" in c.lower()]
         if not time_cols:

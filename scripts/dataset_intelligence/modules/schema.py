@@ -3,7 +3,7 @@ import polars as pl
 from config import METADATA_DIR, logger
 
 class SchemaDiscovery:
-    def run(self, inventory_df):
+    def run(self, inventory_df: pd.DataFrame) -> pd.DataFrame:
         logger.info("Module 2: Schema Discovery")
         schema_records = []
         
