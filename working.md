@@ -548,3 +548,160 @@ If port 8000 or 5173 is already in use by another process:
   fuser -k 8000/tcp
   fuser -k 5173/tcp
   ```
+  ---
+
+  How to Run the Application
+
+  Prerequisites
+
+  - Python 3.12+
+  - Node.js 18+
+
+  1. Install Backend Dependencies
+
+  # From the project root
+  pip install -r backend/requirements.txt
+  # OR using pyproject.toml (includes all extras)
+  pip install -e .
+
+  2. Start the Backend
+
+  # From the project root
+  python -m backend.app.main
+  # OR
+  uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  The API will be available at http://localhost:8000. The database (insider_threat.db) is auto-created with seed data on
+  first run.
+
+  - API docs: http://localhost:8000/docs
+  - Health check: http://localhost:8000/health
+
+  3. Install Frontend Dependencies
+
+  cd frontend
+  npm install
+
+  4. Start the Frontend
+
+  cd frontend
+  npm run dev
+
+  The UI will be available at http://localhost:5173.
+
+  ---
+
+  How to Test the Application
+
+  Manual Testing — Login Credentials (pre-seeded)
+
+  ┌──────────┬─────────────┬─────────┐
+  │ Username │  Password   │  Role   │
+  ├──────────┼─────────────┼─────────┤
+  │ analyst  │ password123 │ analyst │
+  ├──────────┼─────────────┼─────────┤
+  │ admin    │ admin123    │ admin   │
+  ├──────────┼─────────────┼─────────┤
+  │ auditor  │ auditor123  │ auditor │
+  └──────────┴─────────────┴─────────┘
+
+  1. Open http://localhost:5173 → login with credentials above
+  2. Dashboard shows pre-seeded threat predictions and alerts
+  3. Graph Viewer → search for employee IDs (MOH0273, LAP0338, etc.)
+  4. Explainability → view AI explanations per prediction
+
+  API Testing via Swagger UI
+
+  1. Go to http://localhost:8000/docs
+  2. POST /api/v1/auth/login with username/password → get JWT token
+  3. Click Authorize → paste the token
+  4. Test any endpoint: predictions, alerts, graphs, explanations
+
+  Quick API Test via curl
+
+  # Login and get token
+  TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/login \
+    -F "username=analyst" -F "password=password123" | python3 -c "import sys,json;
+  print(json.load(sys.stdin)['access_token'])")
+
+  # Health check
+  curl http://localhost:8000/health
+
+  # List predictions
+  curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/v1/predictions/
+
+  # List alerts
+  curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/v1/alerts/
+
+  # Query graph for an employee
+  curl -s -X POST http://localhost:8000/api/v1/graphs/query \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{"node_id": "MOH0273", "depth": 2}'
+
+  Run Automated Tests
+
+  # From project root
+  pytest tests/ -v --tb=short
+
+✻ Waiting for 1 background agent to finish
+
+● Agent "Scan all backend/app Python files for bugs" failed: Agent terminated early due to an API error: API Error:
+Request rejected (429) · [antigravity/claude-sonnet-4-6] All antigravity accounts have exhausted their quota (reset
+after 5m) (error type rate_limit, HTTP 429, model sent to the API: antigravity/claude-sonnet-4-6)
+
+● API Error: Request rejected (429) · [antigravity/claude-sonnet-4-6] All antigravity accounts have exhausted
+  their quota (reset after 5m)
+
+✻ Cooked for 9m 43s · done 4:58 AM
+
+❯ /model kimi-coding/k3
+  ⎿  API error: 502 {"error":{"message":"[kimi-coding/k3] upstream returned an empty response without usable
+     output","type":"upstream_response_error","code":"upstream_empty_response"}}
+
+❯ /model gemini-3.7-flash-medium
+  ⎿  Set model to gemini-3.7-flash-medium and saved as your default for new sessions
+
+❯ continue and complete the previous work
+
+  Thought for 13s (ctrl+o to expand)
+
+● Bash(python3 -m py_compile $(find backend ai -name "*.py"))
+  ⎿  backend/venv/Lib/site-packages/passlib/tests/test_apache.py:210: SyntaxWarning: invalid escape sequence '\('
+       with self.assertWarningList("update\(\) is deprecated"):
+     backend/venv/Lib/site-packages/passlib/tests/test_apache.py:280: SyntaxWarning: invalid escape sequence '\('
+     … +21 lines (ctrl+o to expand)
+
+● Bash(python3 -m py_compile $(find backend/app ai -name "*.py"))
+  ⎿  (No output)
+
+● Reading 2 files… (ctrl+o to expand)
+  ⎿  $ cat /mnt/c/Users/HP/Desktop/InsiderThreat/backend/app/api/v1/endpoints/reports.py && echo "=== SETTINGS ===" &&
+     cat /mnt/c/Users/HP/Desktop/InsiderThreat/backend/app/api/v1/endpoints/settings.py && echo "=== EXPLAINABILITY ==="
+     && cat /mnt/c/Users/HP/Desktop/InsiderThreat/backend/app/api/v1/endpo…
+
+· Considering… (4m 53s · ↓ 733 tokens)
+  ⎿  Tip: /loop runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling
+     status.
+
+  /btw update the working.md with this How to Run the Application Prerequisites - Python 3.12+ - Node.js 18+ 1. Install…
+
+
+    # List predictions
+    curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/v1/predictions/
+
+    # List alerts
+    curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/v1/alerts/
+
+    # Query graph for an employee
+    curl -s -X POST http://localhost:8000/api/v1/graphs/query \
+      -H "Authorization: Bearer $TOKEN" \
+      -H "Content-Type: application/json" \
+      -d '{"node_id": "MOH0273", "depth": 2}'
+
+    Run Automated Tests
+
+    # From project root
+    pytest tests/ -v --tb=short
+
+    To write this file directly to disk, please ask in the main conversation where file-writing tools are active.
