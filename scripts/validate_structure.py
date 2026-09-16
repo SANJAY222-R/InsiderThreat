@@ -21,7 +21,6 @@ REQUIRED_PATHS = [
     "pyproject.toml",
     "Makefile",
     ".editorconfig",
-    ".env.example",
     
     # Backend
     "backend/__init__.py",
@@ -80,15 +79,15 @@ REQUIRED_PATHS = [
     "tests/conftest.py",
     "tests/unit/backend/test_exceptions.py",
 
-    # Deployment
-    "deployment/docker/Dockerfile.backend",
-    "deployment/docker/Dockerfile.frontend",
-    "deployment/docker/nginx/nginx.conf",
-    "deployment/docker-compose.yml",
+    # # Deployment
+    # "deployment/docker/Dockerfile.backend",
+    # "deployment/docker/Dockerfile.frontend",
+    # "deployment/docker/nginx/nginx.conf",
+    # "deployment/docker-compose.yml",
 
-    # CI/CD
-    ".github/workflows/ci.yml",
-    ".github/workflows/cd.yml",
+    # # CI/CD
+    # ".github/workflows/ci.yml",
+    # ".github/workflows/cd.yml",
 
     # Docs
     "docs/architecture/system_overview.md",

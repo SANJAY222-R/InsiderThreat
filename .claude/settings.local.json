@@ -11,7 +11,15 @@
       "Bash(sudo apt-get install -y python3-pip python3-venv)",
       "Bash(curl -sSL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py)",
       "Bash(~/.local/bin/pip3 install *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(git config *)",
+      "Bash(git checkout *)",
+      "Bash(pytest *)",
+      "Bash(backend/venv/Scripts/python.exe --version)",
+      "Bash(backend/venv/bin/python --version)",
+      "Bash(./backend/venv/Scripts/python.exe *)",
+      "Bash(PYTHONIOENCODING=utf-8 ./backend/venv/Scripts/python.exe *)",
+      "Bash(PYTHONUTF8=1 ./backend/venv/Scripts/python.exe *)"
     ]
   }
 }
