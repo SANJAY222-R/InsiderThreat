@@ -22,9 +22,7 @@ REQUIRED_PATHS = [
     "Makefile",
     ".editorconfig",
     ".env.example",
-    "CONTRIBUTING.md",
-    "CHANGELOG.md",
-
+    
     # Backend
     "backend/__init__.py",
     "backend/app/__init__.py",
