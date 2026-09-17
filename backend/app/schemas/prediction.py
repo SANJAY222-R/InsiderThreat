@@ -8,6 +8,7 @@ __all__ = ["PredictionRequest", "PredictionResponse", "BatchPredictionRequest"]
 
 class PredictionRequest(BaseModel):
     employee_id: str
+    context: dict[str, Any] | None = None
     time_window_start: datetime | None = None
     time_window_end: datetime | None = None
 

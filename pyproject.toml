@@ -92,6 +92,8 @@ markers = [
     "integration: Integration tests",
     "slow: Slow tests",
     "gpu: Tests requiring GPU",
+    "api: API tests",
+    "xai: Explainability tests",
 ]
 
 [tool.flake8]

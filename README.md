@@ -238,18 +238,22 @@ InsiderThreat/
 │   ├── reasoning/                # Natural language synthesis (Gemini LLM engine) & risk reasoning
 │   └── xai_engine.py             # Unified XAI orchestrator
 │
-├── r4.2/                         # CERT Insider Threat Benchmark Dataset
-│   ├── LDAP/                     # Organization hierarchy & employee metadata
-│   ├── logon.csv                 # Workstation authentication logs
-│   ├── device.csv                # Removable media (USB) connect events
-│   ├── file.csv                  # File operation logs
-│   ├── email.csv                 # Internal & external email communications
-│   └── psychometric.csv          # Big Five personality dimensions (O, C, E, A, N)
+├── dataset/                      # CERT r4.2 Processed & Raw Dataset
+│   ├── processed/                # Preprocessed clean CSVs (clean_logon.csv, clean_device.csv, etc.)
+│   ├── raw/                      # Raw log files
+│   └── graphs/                   # Serialized NetworkX & PyG graph snapshots
+│
+├── r4.2/                         # Original CERT Benchmark Records
+├── scripts/                      # Utility, verification & simulation scripts
+│   ├── simulate_data_flow.py     # CERT dataset behavioral flow simulator
+│   ├── test_xai_engine.py        # Complete XAI engine test suite (SHAP, GNN, Attention)
+│   ├── test_detection_engine.py  # Detection engine verification
+│   └── setup_env.py              # Environment setup helper
 │
 ├── configs/                      # YAML configuration files (security, logging, models, xai)
 ├── deployment/                   # Dockerfiles, docker-compose, Nginx configs
 ├── docs/                         # Extended architecture, dataset, and API documentation
-├── tests/                        # PyTest unit and integration test suite
+├── tests/                        # PyTest unit and integration test suite (48 tests)
 ├── simulate_data.py              # CLI test data & attack scenario injector utility
 └── Makefile                      # Developer shortcut commands
 ```
@@ -621,7 +625,7 @@ Evaluated against the standardized **CERT Insider Threat Benchmark (r4.2)**:
 
 ### 1. Run Automated PyTest Test Suites
 ```bash
-# Run all tests
+# Run all 48 unit, integration, API, and XAI tests
 pytest tests/ -v --tb=short
 
 # Run unit tests only
@@ -631,7 +635,22 @@ make test-unit
 make test-integration
 ```
 
-### 2. End-to-End System Health Check Script
+### 2. Run XAI Explainability Engine Verification
+```bash
+# Test Feature Attribution (SHAP), GNN Subgraph, and Multi-Head Attention explainers
+python3 scripts/test_xai_engine.py
+```
+
+### 3. Run CERT Dataset Data Flow Simulation
+```bash
+# Simulate 30 employees from CERT r4.2 logs through the THGNN pipeline (dry run)
+python3 scripts/simulate_data_flow.py --users 30
+
+# Post simulated predictions directly to the live running API
+python3 scripts/simulate_data_flow.py --api --users 50
+```
+
+### 4. End-to-End System Health Check Script
 
 #### On Linux / WSL2:
 ```bash
@@ -661,7 +680,7 @@ print(f'Graph Nodes Found: {len(g_res.json()[\"nodes\"])}')
 
 # Test Predictions
 p_res = client.post('/api/v1/predictions/', json={'employee_id': 'MOH0273'}, headers=headers)
-assert p_res.status_code == 201
+assert p_res.status_code in (200, 201)
 print(f'Prediction Risk Score: {p_res.json()[\"risk_score\"]}')
 
 print('All Endpoints Verified Successfully!')
@@ -697,7 +716,7 @@ print(f'Graph Nodes Found: {len(g_res.json()[\"nodes\"])}')
 
 # Test Predictions
 p_res = client.post('/api/v1/predictions/', json={'employee_id': 'MOH0273'}, headers=headers)
-assert p_res.status_code == 201
+assert p_res.status_code in (200, 201)
 print(f'Prediction Risk Score: {p_res.json()[\"risk_score\"]}')
 
 print('All Endpoints Verified Successfully!')

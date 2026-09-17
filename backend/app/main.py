@@ -1,5 +1,7 @@
+import asyncio
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from contextlib import asynccontextmanager
 
 from backend.app.core.config import get_settings
 from backend.app.core.logging import setup_logging
@@ -12,6 +14,7 @@ from backend.app.middleware.rate_limiter import RateLimitMiddleware
 from backend.app.middleware.auth import AuthMiddleware
 from backend.app.api.v1.router import api_v1_router
 from backend.app.websocket.manager import manager
+from backend.app.websocket.data_feed import stream_threat_events
 
 import backend.app.models  # noqa: F401 — ensure all models are registered
 
@@ -25,12 +28,26 @@ except Exception as e:
     import logging
     logging.getLogger(__name__).warning(f"Database seeding failed (non-fatal): {e}")
 
+
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    # Start real-time threat event broadcaster
+    task = asyncio.create_task(stream_threat_events(manager, interval_seconds=4.0))
+    yield
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+
+
 app = FastAPI(
     title="Enterprise Insider Threat Detection API",
     description="FastAPI backend for temporal heterogeneous graph learning insider threat detection",
     version=settings.app_version,
     docs_url="/docs" if settings.is_development else None,
     redoc_url="/redoc" if settings.is_development else None,
+    lifespan=lifespan,
 )
 
 setup_cors(app)
@@ -48,6 +65,7 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
         while True:
             data = await websocket.receive_text()
+            # Clients can send commands; echo them for now
             await manager.broadcast(f"Echo: {data}")
     except WebSocketDisconnect:
         manager.disconnect(websocket)

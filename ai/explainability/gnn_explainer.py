@@ -61,5 +61,9 @@ class GNNExplainerWrapper(BaseExplainer):
         return {
             "target_id": target_id,
             "method": "GNNExplainer Subgraph Masking",
+            "nodes": subgraph["nodes"],
+            "edges": subgraph["edges"],
+            "subgraph_entropy": subgraph["subgraph_entropy"],
+            "fidelity_score": subgraph["fidelity_score"],
             "subgraph": subgraph,
         }

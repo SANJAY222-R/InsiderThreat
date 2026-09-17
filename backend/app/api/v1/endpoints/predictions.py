@@ -12,9 +12,10 @@ router = APIRouter()
 predictor = Predictor(model_version="1.0.0")
 
 
+@router.post("/predict", response_model=PredictionResponse, status_code=201)
 @router.post("/", response_model=PredictionResponse, status_code=201)
 def create_prediction(req: PredictionRequest, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
-    result = predictor.predict(employee_id=req.employee_id)
+    result = predictor.predict(employee_id=req.employee_id, context=req.context)
 
     prediction = Prediction(
         employee_id=result["employee_id"],
