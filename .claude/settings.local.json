@@ -19,7 +19,10 @@
       "Bash(backend/venv/bin/python --version)",
       "Bash(./backend/venv/Scripts/python.exe *)",
       "Bash(PYTHONIOENCODING=utf-8 ./backend/venv/Scripts/python.exe *)",
-      "Bash(PYTHONUTF8=1 ./backend/venv/Scripts/python.exe *)"
+      "Bash(PYTHONUTF8=1 ./backend/venv/Scripts/python.exe *)",
+      "Bash(git check-ignore *)",
+      "Bash(git status *)",
+      "Bash(git *)"
     ]
   }
 }
