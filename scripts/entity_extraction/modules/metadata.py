@@ -1,4 +1,5 @@
 import json
+from typing import Any, Dict
 from .base_extractor import BaseEntityModule
 import logging
 import os
@@ -7,8 +8,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class MetadataGenerator(BaseEntityModule):
     """Module 8: Entity Metadata Generation"""
-    
-    def run(self, entities: dict):
+
+    def run(self, entities: Dict[str, Any]) -> None:
         meta = {
             "entity_counts": {k: df.height for k, df in entities.items() if not df.is_empty()},
             "quality_score": 0.95,

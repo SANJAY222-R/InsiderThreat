@@ -464,9 +464,34 @@ docker-compose -f deployment/docker-compose.yml up -d --build
 
 ---
 
-### Step 3: Default User Accounts & RBAC Credentials
+### Step 3: Database Configuration (SQLite & Neon PostgreSQL)
 
-The system automatically initializes and seeds the SQLite database (`insider_threat.db`) with default users on first startup:
+The system supports local development on SQLite and production deployment on **Neon Serverless PostgreSQL (PostgreSQL 18.6)** using **SQLAlchemy 2.0** with the modern `psycopg` (psycopg 3) driver, native `JSONB` with GIN indexing, and connection pre-ping / auto-recycling.
+
+#### Connecting to Neon PostgreSQL (0.5 GB Free Tier)
+Add your Neon pooled connection string to your `.env` file:
+
+```env
+DATABASE_URL=postgresql+psycopg://neondb_owner:YOUR_PASSWORD@ep-sample-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require
+```
+
+#### Running Alembic Migrations
+```bash
+# Apply all database migrations to latest revision
+alembic upgrade head
+
+# Rollback migrations if needed
+alembic downgrade base
+```
+
+#### Seeding Initial Baseline Data
+```bash
+PYTHONPATH=. python3 backend/app/database/seed.py
+```
+
+### Step 4: Default User Accounts & RBAC Credentials
+
+The system automatically initializes and seeds default users on first startup:
 
 | Role | Username | Password | Access Scope & Permissions |
 | :--- | :--- | :--- | :--- |

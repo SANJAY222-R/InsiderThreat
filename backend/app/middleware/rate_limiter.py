@@ -1,5 +1,6 @@
 import time
 from collections import defaultdict
+from typing import Any, Callable, Dict, List
 
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -9,12 +10,12 @@ __all__ = ["RateLimitMiddleware"]
 
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, requests_per_minute: int = 60):
+    def __init__(self, app: Any, requests_per_minute: int = 60) -> None:
         super().__init__(app)
         self.rpm = requests_per_minute
-        self._window: dict[str, list[float]] = defaultdict(list)
+        self._window: Dict[str, List[float]] = defaultdict(list)
 
-    async def dispatch(self, request: Request, call_next) -> Response:
+    async def dispatch(self, request: Request, call_next: Callable[[Request], Any]) -> Response:
         if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi"):
             return await call_next(request)
 

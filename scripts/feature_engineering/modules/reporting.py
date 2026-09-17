@@ -1,16 +1,17 @@
-import pandas as pd
-import logging
+from typing import Any, Dict
 from pathlib import Path
+import logging
+import pandas as pd
 
 logger = logging.getLogger("FeatureEngineering")
 
 class FeatureReporter:
     """Module 14: Feature Reports"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         self.reports_dir = Path(cfg.paths.reports_dir)
-        
-    def run(self, feature_sets: dict):
+
+    def run(self, feature_sets: Dict[str, Any]) -> None:
         logger.info("Generating Feature Reports (Statistics, Missing)...")
         
         try:

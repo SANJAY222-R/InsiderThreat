@@ -1,5 +1,13 @@
+# Database Configuration
 sqlite:
   url: "sqlite:///./insider_threat.db"
+postgres:
+  url: "postgresql+psycopg://user:password@ep-sample-pooler.us-east-2.aws.neon.tech/insider_threat?sslmode=require"
+  pool_size: 10
+  max_overflow: 20
+  pool_recycle: 300
+  pool_timeout: 30
+  pool_pre_ping: true
 neo4j:
   uri: "bolt://localhost:7687"
   user: "neo4j"

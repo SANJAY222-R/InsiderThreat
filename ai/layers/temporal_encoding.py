@@ -7,7 +7,7 @@ class TimeEncoder(nn.Module):
     Temporal encoding module.
     Supports Sinusoidal Time Encoding and Learnable Time Embeddings.
     """
-    def __init__(self, out_dim: int, method: str = 'sinusoidal'):
+    def __init__(self, out_dim: int, method: str = 'sinusoidal') -> None:
         super().__init__()
         self.out_dim = out_dim
         self.method = method

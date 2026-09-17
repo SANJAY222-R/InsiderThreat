@@ -1,24 +1,29 @@
 import torch
 import torch.nn as nn
 from torch_geometric.nn import MessagePassing
-from typing import Dict, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 class HeteroMessagePassing(MessagePassing):
     """
     Message passing layer customized for relation types using attention mechanisms.
     """
-    def __init__(self, hidden_dim: int, edge_types: list):
+    def __init__(self, hidden_dim: int, edge_types: List[Tuple[str, str, str]]) -> None:
         super().__init__(aggr='add', node_dim=0)
         self.hidden_dim = hidden_dim
         self.edge_types = edge_types
-        
+
         # Linear transformations for messages per edge type
         self.msg_linears = nn.ModuleDict({
-            "_".join(e_type): nn.Linear(hidden_dim, hidden_dim) 
+            "_".join(e_type): nn.Linear(hidden_dim, hidden_dim)
             for e_type in edge_types
         })
 
-    def forward(self, x_dict: Dict[str, torch.Tensor], edge_index_dict: Dict[Tuple[str, str, str], torch.Tensor], edge_attr_dict: Dict[Tuple[str, str, str], torch.Tensor] = None) -> Dict[str, torch.Tensor]:
+    def forward(
+        self,
+        x_dict: Dict[str, torch.Tensor],
+        edge_index_dict: Dict[Tuple[str, str, str], torch.Tensor],
+        edge_attr_dict: Optional[Dict[Tuple[str, str, str], torch.Tensor]] = None,
+    ) -> Dict[str, torch.Tensor]:
         out_dict = {ntype: torch.zeros_like(x) for ntype, x in x_dict.items()}
         
         for e_type, edge_index in edge_index_dict.items():

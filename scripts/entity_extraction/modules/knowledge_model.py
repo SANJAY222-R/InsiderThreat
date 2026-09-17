@@ -31,8 +31,8 @@ class KnowledgeModel(BaseModel):
 
 class KnowledgeModelGenerator(BaseEntityModule):
     """Module 6: Knowledge Model Generation"""
-    
-    def run(self):
+
+    def run(self) -> None:
         km = KnowledgeModel(
             entities=[
                 EntityDef(

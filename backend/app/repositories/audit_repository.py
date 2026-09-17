@@ -1,3 +1,5 @@
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy.orm import Session
 
 from backend.app.models.audit_log import AuditLog
@@ -9,9 +11,9 @@ class AuditRepository:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        user_id: str | None = None,
-        action: str | None = None,
-    ):
+        user_id: Optional[str] = None,
+        action: Optional[str] = None,
+    ) -> List[AuditLog]:
         q = db.query(AuditLog)
         if user_id:
             q = q.filter(AuditLog.user_id == user_id)
@@ -23,12 +25,12 @@ class AuditRepository:
         self,
         db: Session,
         action: str,
-        user_id: str | None = None,
-        resource_type: str | None = None,
-        resource_id: str | None = None,
-        details: dict | None = None,
-        ip_address: str | None = None,
-    ):
+        user_id: Optional[str] = None,
+        resource_type: Optional[str] = None,
+        resource_id: Optional[str] = None,
+        details: Optional[Dict[str, Any]] = None,
+        ip_address: Optional[str] = None,
+    ) -> AuditLog:
         entry = AuditLog(
             user_id=user_id,
             action=action,

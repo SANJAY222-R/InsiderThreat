@@ -1,7 +1,8 @@
 import asyncio
+from contextlib import asynccontextmanager
+from typing import Any, AsyncGenerator, Dict
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from contextlib import asynccontextmanager
 
 from backend.app.core.config import get_settings
 from backend.app.core.logging import setup_logging
@@ -30,7 +31,7 @@ except Exception as e:
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):
+async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
     # Start real-time threat event broadcaster
     task = asyncio.create_task(stream_threat_events(manager, interval_seconds=4.0))
     yield
@@ -60,7 +61,7 @@ app.include_router(api_v1_router, prefix="/api/v1")
 
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(websocket: WebSocket) -> None:
     await manager.connect(websocket)
     try:
         while True:
@@ -72,7 +73,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 @app.get("/health")
-def health_check():
+def health_check() -> Dict[str, Any]:
     return {
         "status": "healthy",
         "service": settings.app_name,

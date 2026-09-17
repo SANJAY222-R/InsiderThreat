@@ -16,12 +16,12 @@ class NodeSchema(BaseModel):
 
 class GraphNodeSchemaDoc(BaseModel):
     version: str = "1.0"
-    schema_definition: dict
+    schema_definition: Dict[str, Any]
 
 class NodeSchemaGenerator(BaseEntityModule):
     """Module 7: Node Schema Generation"""
-    
-    def run(self):
+
+    def run(self) -> None:
         doc = GraphNodeSchemaDoc(
             schema_definition=NodeSchema.model_json_schema()
         )

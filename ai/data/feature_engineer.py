@@ -25,7 +25,7 @@ class FeatureEngineer:
     Transforms raw logs and entity activities into ML-ready feature vectors.
     """
 
-    def __init__(self, normal_working_hours: tuple[int, int] = (8, 18)):
+    def __init__(self, normal_working_hours: tuple[int, int] = (8, 18)) -> None:
         self.work_start, self.work_end = normal_working_hours
         self.feature_names = [
             "hour_of_day",

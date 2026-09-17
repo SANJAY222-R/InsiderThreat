@@ -23,7 +23,7 @@ class TemporalEncoder:
     - Relative time difference / decay encoding
     """
 
-    def __init__(self, dimension: int = 128, method: str = "sinusoidal"):
+    def __init__(self, dimension: int = 128, method: str = "sinusoidal") -> None:
         self.dimension = dimension
         self.method = method
 

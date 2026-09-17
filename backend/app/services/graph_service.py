@@ -26,7 +26,7 @@ class GraphService:
 
     _instance: Optional["GraphService"] = None
 
-    def __init__(self, data_dir: Optional[Path] = None):
+    def __init__(self, data_dir: Optional[Path] = None) -> None:
         settings = get_settings()
         self.data_dir = data_dir or settings.dataset_raw_path
         self.graph = nx.MultiDiGraph()

@@ -9,12 +9,12 @@ class TestHealthEndpoint:
     """Tests for the /health endpoint."""
 
     @pytest.mark.api
-    def test_health_returns_200(self, client):
+    def test_health_returns_200(self, client) -> None:
         response = client.get("/health")
         assert response.status_code == 200
 
     @pytest.mark.api
-    def test_health_response_schema(self, client):
+    def test_health_response_schema(self, client) -> None:
         response = client.get("/health")
         data = response.json()
         assert "status" in data
@@ -23,7 +23,7 @@ class TestHealthEndpoint:
         assert "version" in data
 
     @pytest.mark.api
-    def test_openapi_schema_accessible(self, client):
+    def test_openapi_schema_accessible(self, client) -> None:
         response = client.get("/openapi.json")
         assert response.status_code == 200
         schema = response.json()

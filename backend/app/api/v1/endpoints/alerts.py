@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -12,15 +13,15 @@ from backend.app.schemas.alert import AlertCreate, AlertResponse, AlertUpdate
 router = APIRouter()
 
 
-@router.get("/", response_model=list[AlertResponse])
+@router.get("/", response_model=List[AlertResponse])
 def list_alerts(
     skip: int = 0,
     limit: int = 50,
-    status: str | None = Query(default=None),
-    severity: str | None = Query(default=None),
+    status: Optional[str] = Query(default=None),
+    severity: Optional[str] = Query(default=None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_user),
-):
+) -> List[Alert]:
     query = db.query(Alert)
     if status:
         query = query.filter(Alert.status == status)
@@ -30,7 +31,7 @@ def list_alerts(
 
 
 @router.post("/", response_model=AlertResponse, status_code=201)
-def create_alert(alert_in: AlertCreate, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def create_alert(alert_in: AlertCreate, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Alert:
     alert = Alert(
         employee_id=alert_in.employee_id,
         prediction_id=alert_in.prediction_id,
@@ -46,7 +47,7 @@ def create_alert(alert_in: AlertCreate, db: Session = Depends(get_db), _: User =
 
 
 @router.get("/{alert_id}", response_model=AlertResponse)
-def get_alert(alert_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def get_alert(alert_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Alert:
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")
@@ -54,7 +55,7 @@ def get_alert(alert_id: int, db: Session = Depends(get_db), _: User = Depends(ge
 
 
 @router.put("/{alert_id}", response_model=AlertResponse)
-def update_alert(alert_id: int, alert_in: AlertUpdate, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def update_alert(alert_id: int, alert_in: AlertUpdate, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Alert:
     alert = db.query(Alert).filter(Alert.id == alert_id).first()
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")

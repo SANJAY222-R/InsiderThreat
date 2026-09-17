@@ -9,13 +9,13 @@ class TestGraphExportIntegration:
     """Integration tests for graph export functionality."""
 
     @pytest.mark.integration
-    def test_networkx_export(self):
+    def test_networkx_export(self) -> None:
         """Should export graph to NetworkX format."""
         # TODO (Phase 3): Implement
         pass
 
     @pytest.mark.integration
-    def test_pyg_export(self):
+    def test_pyg_export(self) -> None:
         """Should export graph to PyG HeteroData format."""
         # TODO (Phase 3): Implement
         pass

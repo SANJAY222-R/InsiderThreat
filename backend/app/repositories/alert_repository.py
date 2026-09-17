@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Any, List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -6,7 +7,7 @@ from backend.app.models.alert import Alert
 
 
 class AlertRepository:
-    def get(self, db: Session, alert_id: int):
+    def get(self, db: Session, alert_id: int) -> Optional[Alert]:
         return db.query(Alert).filter(Alert.id == alert_id).first()
 
     def get_all(
@@ -14,9 +15,9 @@ class AlertRepository:
         db: Session,
         skip: int = 0,
         limit: int = 100,
-        status: str | None = None,
-        severity: str | None = None,
-    ):
+        status: Optional[str] = None,
+        severity: Optional[str] = None,
+    ) -> List[Alert]:
         q = db.query(Alert)
         if status:
             q = q.filter(Alert.status == status)
@@ -24,7 +25,7 @@ class AlertRepository:
             q = q.filter(Alert.severity == severity)
         return q.order_by(Alert.created_at.desc()).offset(skip).limit(limit).all()
 
-    def count(self, db: Session, status: str | None = None):
+    def count(self, db: Session, status: Optional[str] = None) -> int:
         q = db.query(Alert)
         if status:
             q = q.filter(Alert.status == status)
@@ -36,10 +37,10 @@ class AlertRepository:
         employee_id: str,
         title: str,
         severity: str = "medium",
-        prediction_id: int | None = None,
-        description: str | None = None,
-        notes: str | None = None,
-    ):
+        prediction_id: Optional[int] = None,
+        description: Optional[str] = None,
+        notes: Optional[str] = None,
+    ) -> Alert:
         alert = Alert(
             employee_id=employee_id,
             title=title,
@@ -53,7 +54,7 @@ class AlertRepository:
         db.refresh(alert)
         return alert
 
-    def update(self, db: Session, alert_id: int, **kwargs):
+    def update(self, db: Session, alert_id: int, **kwargs: Any) -> Optional[Alert]:
         alert = self.get(db, alert_id)
         if not alert:
             return None

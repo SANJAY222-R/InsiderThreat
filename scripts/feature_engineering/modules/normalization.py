@@ -1,21 +1,22 @@
-import polars as pl
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
-import pandas as pd
+from typing import Any, Dict
+from pathlib import Path
 import logging
 import joblib
-from pathlib import Path
+import pandas as pd
+import polars as pl
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
 
 logger = logging.getLogger("FeatureEngineering")
 
 class FeatureNormalizer:
     """Module 10: Feature Normalization"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         self.cfg = cfg
         self.method = cfg.options.normalization_method
         self.metadata_dir = Path(cfg.paths.metadata_dir)
-        
-    def run(self, feature_sets: dict) -> dict:
+
+    def run(self, feature_sets: Dict[str, Any]) -> Dict[str, Any]:
         if self.method == "none":
             return feature_sets
             

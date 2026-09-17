@@ -20,7 +20,7 @@ class Benchmark:
     Benchmark suite for comparing model performance across metrics and latency.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.default_results: Dict[str, Dict[str, Any]] = {
             "THGNN (Temporal Heterogeneous GNN)": {
                 "accuracy": 0.962,

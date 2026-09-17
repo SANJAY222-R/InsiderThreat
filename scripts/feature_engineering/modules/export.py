@@ -1,16 +1,17 @@
-import polars as pl
-import logging
+from typing import Any, Dict
 from pathlib import Path
+import logging
+import polars as pl
 
 logger = logging.getLogger("FeatureEngineering")
 
 class FeatureExporter:
     """Module 12: Feature Export"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         self.out_dir = Path(cfg.paths.features_dir)
-        
-    def run(self, feature_sets: dict):
+
+    def run(self, feature_sets: Dict[str, Any]) -> None:
         logger.info("Exporting feature sets to CSV...")
         
         for name, df in feature_sets.items():

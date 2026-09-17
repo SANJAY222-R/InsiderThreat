@@ -23,7 +23,7 @@ class BatchPredictor:
     Batch threat evaluation engine for enterprise-wide scheduled scanning.
     """
 
-    def __init__(self, predictor: Optional[Predictor] = None):
+    def __init__(self, predictor: Optional[Predictor] = None) -> None:
         self.predictor = predictor or Predictor()
 
     def predict_batch(

@@ -13,7 +13,7 @@ class TemporalModeler(BaseGraphModule):
 
 class SnapshotGenerator(BaseGraphModule):
     """Module 4: Graph Snapshots"""
-    def run(self, G: nx.MultiDiGraph):
+    def run(self, G: nx.MultiDiGraph) -> None:
         # We skip actual physical segmentation for all days to avoid creating 1000s of files.
         # We will just note the capabilities.
         logger.info("Graph Snapshots logic verified. Skipping disk explosion of daily graphs.")

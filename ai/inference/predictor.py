@@ -28,7 +28,7 @@ class Predictor:
     - Communication anomalies (external email volume, abnormal domains)
     """
 
-    def __init__(self, model_version: str = "1.0.0", config: Optional[Dict[str, Any]] = None):
+    def __init__(self, model_version: str = "1.0.0", config: Optional[Dict[str, Any]] = None) -> None:
         self.model_version = model_version
         self.config = config or {}
         self.feature_engineer = FeatureEngineer()

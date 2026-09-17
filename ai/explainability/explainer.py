@@ -18,7 +18,7 @@ class BaseExplainer(ABC):
     Abstract base class for threat explainability methods.
     """
 
-    def __init__(self, name: str = "BaseExplainer"):
+    def __init__(self, name: str = "BaseExplainer") -> None:
         self.name = name
 
     @abstractmethod

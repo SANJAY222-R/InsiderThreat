@@ -1,3 +1,4 @@
+from typing import Any
 import os
 import sys
 import logging
@@ -27,11 +28,11 @@ from modules.reporting import FeatureReporter
 logger = logging.getLogger("FeatureEngineering")
 logger.setLevel(logging.INFO)
 
-def setup_directories(cfg):
+def setup_directories(cfg: Any) -> None:
     for d in [cfg.paths.features_dir, cfg.paths.reports_dir, cfg.paths.logs_dir, cfg.paths.metadata_dir]:
         Path(d).mkdir(parents=True, exist_ok=True)
 
-def main():
+def main() -> None:
     cfg = OmegaConf.load(BASE_DIR / "conf" / "config.yaml")
     setup_directories(cfg)
     

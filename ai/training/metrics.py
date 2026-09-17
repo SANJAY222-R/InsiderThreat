@@ -65,10 +65,10 @@ class MetricTracker:
     Tracks and aggregates batch-level metrics across an entire training or validation epoch.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.reset()
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset all tracked metrics."""
         self.y_true: List[int] = []
         self.y_pred: List[int] = []
@@ -81,7 +81,7 @@ class MetricTracker:
         targets: Optional[List[int]] = None,
         probs: Optional[List[float]] = None,
         threshold: float = 0.5,
-    ):
+    ) -> None:
         """
         Record a batch's loss and prediction outputs.
         """

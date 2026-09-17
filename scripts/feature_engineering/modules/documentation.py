@@ -1,16 +1,17 @@
-import pandas as pd
-import logging
+from typing import Any, Dict
 from pathlib import Path
+import logging
+import pandas as pd
 
 logger = logging.getLogger("FeatureEngineering")
 
 class FeatureDocumenter:
     """Module 13: Feature Documentation"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         self.metadata_dir = Path(cfg.paths.metadata_dir)
-        
-    def run(self, feature_sets: dict):
+
+    def run(self, feature_sets: Dict[str, Any]) -> None:
         logger.info("Generating Feature Catalog...")
         
         catalog = []

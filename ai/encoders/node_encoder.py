@@ -8,7 +8,7 @@ class HeteroNodeEncoder(nn.Module):
     Projects diverse feature spaces to a fixed-dimensional embedding.
     Supports missing attributes and normalization.
     """
-    def __init__(self, hidden_dim: int, node_types: List[str], feature_dims: Optional[Dict[str, int]] = None):
+    def __init__(self, hidden_dim: int, node_types: List[str], feature_dims: Optional[Dict[str, int]] = None) -> None:
         super().__init__()
         self.hidden_dim = hidden_dim
         self.node_types = node_types

@@ -28,7 +28,7 @@ class EdgeEncoder:
         self,
         hidden_dim: int = 128,
         edge_types: Optional[List[str]] = None,
-    ):
+    ) -> None:
         self.hidden_dim = hidden_dim
         self.edge_types = edge_types or [
             "LOGIN_TO",

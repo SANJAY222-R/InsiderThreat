@@ -20,7 +20,7 @@ class ExplainabilityService:
     Service layer for XAI explanations for model predictions.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._feat_importance = FeatureImportance()
         self._gnn_explainer = GNNExplainerWrapper()
         self._attention_explainer = AttentionExplainer()

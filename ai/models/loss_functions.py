@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from typing import Dict, Optional
 
 class FocalLoss(nn.Module):
-    def __init__(self, alpha: float = 1.0, gamma: float = 2.0, reduction: str = 'mean'):
+    def __init__(self, alpha: float = 1.0, gamma: float = 2.0, reduction: str = 'mean') -> None:
         super().__init__()
         self.alpha = alpha
         self.gamma = gamma
@@ -27,7 +27,7 @@ class THGNNLoss(nn.Module):
     Centralized custom losses for THGNN.
     Supports Focal Loss, BCE, CE, and weighted losses for class imbalance.
     """
-    def __init__(self, loss_type: str = 'focal', class_weights: Optional[Dict[str, float]] = None):
+    def __init__(self, loss_type: str = 'focal', class_weights: Optional[Dict[str, float]] = None) -> None:
         super().__init__()
         self.loss_type = loss_type
         self.class_weights = class_weights or {'normal': 1.0, 'threat': 1.0}

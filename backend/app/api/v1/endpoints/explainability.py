@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -16,7 +17,7 @@ attention_explainer = AttentionExplainer()
 
 
 @router.get("/{prediction_id}")
-def get_explanation(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def get_explanation(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Dict[str, Any]:
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
@@ -48,7 +49,7 @@ def get_explanation(prediction_id: int, db: Session = Depends(get_db), _: User =
 
 
 @router.get("/{prediction_id}/subgraph")
-def get_subgraph_explanation(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def get_subgraph_explanation(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Dict[str, Any]:
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
@@ -60,7 +61,7 @@ def get_subgraph_explanation(prediction_id: int, db: Session = Depends(get_db), 
 
 
 @router.get("/{prediction_id}/attention")
-def get_attention_explanation(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def get_attention_explanation(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Dict[str, Any]:
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")

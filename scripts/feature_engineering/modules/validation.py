@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import polars as pl
 import logging
 
@@ -5,11 +6,11 @@ logger = logging.getLogger("FeatureEngineering")
 
 class FeatureValidator:
     """Module 11: Feature Validation"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         self.cfg = cfg
-        
-    def run(self, feature_sets: dict) -> dict:
+
+    def run(self, feature_sets: Dict[str, Any]) -> Dict[str, Any]:
         logger.info("Validating features (NaNs, Infinite, Constant)...")
         validated_sets = {}
         

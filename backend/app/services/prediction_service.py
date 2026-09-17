@@ -22,7 +22,7 @@ class PredictionService:
     Service layer for threat prediction orchestration.
     """
 
-    def __init__(self, model_version: str = "1.0.0"):
+    def __init__(self, model_version: str = "1.0.0") -> None:
         self._predictor = Predictor(model_version=model_version)
 
     def run_prediction(

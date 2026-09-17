@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import polars as pl
 from .base_extractor import BaseEntityModule
 import logging
@@ -7,8 +8,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class EntityResolver(BaseEntityModule):
     """Module 3: Entity Resolution"""
-    
-    def run(self, entities: dict) -> dict:
+
+    def run(self, entities: Dict[str, Any]) -> Dict[str, Any]:
         prefix_map = {
             "users": "ENT-USR",
             "hosts": "ENT-HST",

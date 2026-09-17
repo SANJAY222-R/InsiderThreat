@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any, Dict
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import func
@@ -16,7 +17,7 @@ router = APIRouter()
 
 
 @router.get("/summary")
-def get_summary(db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def get_summary(db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Dict[str, Any]:
     total_predictions = db.query(func.count(Prediction.id)).scalar() or 0
     total_alerts = db.query(func.count(Alert.id)).scalar() or 0
 
@@ -44,7 +45,7 @@ def get_summary(db: Session = Depends(get_db), _: User = Depends(get_current_use
 
 
 @router.post("/generate", response_model=ReportResponse, status_code=202)
-def generate_report(req: ReportRequest, _: User = Depends(get_current_user)):
+def generate_report(req: ReportRequest, _: User = Depends(get_current_user)) -> ReportResponse:
     return ReportResponse(
         report_id=1,
         report_type=req.report_type,

@@ -1,3 +1,4 @@
+from typing import Any
 import os
 import sys
 import logging
@@ -24,7 +25,7 @@ from modules.recommendations import RecommendationsGenerator
 logger = logging.getLogger("EntityExtraction")
 logger.setLevel(logging.INFO)
 
-def setup_directories(cfg):
+def setup_directories(cfg: Any) -> None:
     dirs = [
         cfg.paths.entities_dir, cfg.paths.schemas_dir, cfg.paths.reports_dir,
         cfg.paths.logs_dir, cfg.paths.metadata_dir, cfg.paths.docs_dir
@@ -32,7 +33,7 @@ def setup_directories(cfg):
     for d in dirs:
         Path(d).mkdir(parents=True, exist_ok=True)
 
-def main():
+def main() -> None:
     cfg = OmegaConf.load(BASE_DIR / "conf" / "config.yaml")
     setup_directories(cfg)
     

@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import polars as pl
 from .base_extractor import BaseEntityModule
 import logging
@@ -6,8 +7,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class AttributeExtractor(BaseEntityModule):
     """Module 4: Entity Attribute Extraction"""
-    
-    def run(self, entities: dict) -> dict:
+
+    def run(self, entities: Dict[str, Any]) -> Dict[str, Any]:
         if "users" not in entities or entities["users"].is_empty():
             return entities
             

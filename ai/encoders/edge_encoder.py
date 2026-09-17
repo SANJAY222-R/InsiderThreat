@@ -1,13 +1,13 @@
 import torch
 import torch.nn as nn
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 class EdgeFeatureEncoder(nn.Module):
     """
     Encodes edge features such as timestamp, weight, duration, and interaction count.
     Generates learnable edge embeddings.
     """
-    def __init__(self, hidden_dim: int, edge_types: list):
+    def __init__(self, hidden_dim: int, edge_types: List[Tuple[str, str, str]]) -> None:
         super().__init__()
         self.hidden_dim = hidden_dim
         self.edge_types = edge_types

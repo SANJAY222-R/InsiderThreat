@@ -1,3 +1,4 @@
+from typing import Any, Optional
 import polars as pl
 from .base_extractor import BaseExtractor
 import logging
@@ -6,11 +7,11 @@ logger = logging.getLogger("FeatureEngineering")
 
 class UsbActivityExtractor(BaseExtractor):
     """Module 3: USB Device Features (from device.csv)"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         super().__init__("usb_features", cfg)
-        
-    def run(self) -> pl.DataFrame | None:
+
+    def run(self) -> Optional[pl.DataFrame]:
         df = self.load_clean_data("device")
         if df is None:
             logger.warning("clean_device.csv not found.")

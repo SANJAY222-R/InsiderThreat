@@ -9,17 +9,17 @@ class TestExplainabilityEndpoints:
     """Tests for the /api/v1/explain endpoints."""
 
     @pytest.mark.api
-    def test_get_explanation_requires_auth(self, client):
+    def test_get_explanation_requires_auth(self, client) -> None:
         response = client.get("/api/v1/explain/1")
         assert response.status_code in (401, 403)
 
     @pytest.mark.api
-    def test_get_explanation_not_found(self, client, auth_headers):
+    def test_get_explanation_not_found(self, client, auth_headers) -> None:
         response = client.get("/api/v1/explain/99999", headers=auth_headers)
         assert response.status_code == 404
 
     @pytest.mark.api
-    def test_get_explanation_success(self, client, auth_headers):
+    def test_get_explanation_success(self, client, auth_headers) -> None:
         # Prediction ID 1 is seeded (MOH0273, CRITICAL)
         response = client.get("/api/v1/explain/1", headers=auth_headers)
         assert response.status_code == 200
@@ -32,7 +32,7 @@ class TestExplainabilityEndpoints:
         assert "feature_importance" in explanation
 
     @pytest.mark.api
-    def test_explanation_feature_importance_values(self, client, auth_headers):
+    def test_explanation_feature_importance_values(self, client, auth_headers) -> None:
         response = client.get("/api/v1/explain/1", headers=auth_headers)
         assert response.status_code == 200
         importance = response.json()["explanation"]["feature_importance"]
@@ -43,7 +43,7 @@ class TestExplainabilityEndpoints:
             assert isinstance(value, (int, float))
 
     @pytest.mark.api
-    def test_get_subgraph_explanation_success(self, client, auth_headers):
+    def test_get_subgraph_explanation_success(self, client, auth_headers) -> None:
         response = client.get("/api/v1/explain/1/subgraph", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
@@ -53,7 +53,7 @@ class TestExplainabilityEndpoints:
         assert isinstance(data["edges"], list)
 
     @pytest.mark.api
-    def test_get_attention_explanation_success(self, client, auth_headers):
+    def test_get_attention_explanation_success(self, client, auth_headers) -> None:
         response = client.get("/api/v1/explain/1/attention", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
@@ -61,11 +61,11 @@ class TestExplainabilityEndpoints:
         assert isinstance(data["attention_heads"], list)
 
     @pytest.mark.api
-    def test_subgraph_not_found(self, client, auth_headers):
+    def test_subgraph_not_found(self, client, auth_headers) -> None:
         response = client.get("/api/v1/explain/99999/subgraph", headers=auth_headers)
         assert response.status_code == 404
 
     @pytest.mark.api
-    def test_attention_not_found(self, client, auth_headers):
+    def test_attention_not_found(self, client, auth_headers) -> None:
         response = client.get("/api/v1/explain/99999/attention", headers=auth_headers)
         assert response.status_code == 404

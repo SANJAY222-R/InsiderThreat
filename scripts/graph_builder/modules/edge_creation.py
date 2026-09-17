@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import networkx as nx
 import polars as pl
 from .base_builder import BaseGraphModule
@@ -7,8 +8,8 @@ logger = logging.getLogger("GraphBuilder")
 
 class EdgeCreator(BaseGraphModule):
     """Module 2: Edge Creation"""
-    
-    def _create_mapping(self, entity_name: str, key_col: str) -> dict:
+
+    def _create_mapping(self, entity_name: str, key_col: str) -> Dict[str, str]:
         df = self.load_entity(entity_name)
         if df is None or df.is_empty():
             return {}

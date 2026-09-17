@@ -23,7 +23,7 @@ class BaseModel(ABC):
     and inference execution contracts.
     """
 
-    def __init__(self, name: str = "BaseModel", version: str = "1.0.0", config: Optional[Dict[str, Any]] = None):
+    def __init__(self, name: str = "BaseModel", version: str = "1.0.0", config: Optional[Dict[str, Any]] = None) -> None:
         self.name = name
         self.version = version
         self.config = config or {}

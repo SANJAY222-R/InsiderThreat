@@ -25,7 +25,7 @@ Exception Tree:
     └── SystemError
 """
 
-from typing import Any
+from typing import Any, Dict, Optional
 
 __all__ = [
     "InsiderThreatBaseException",
@@ -61,14 +61,14 @@ class InsiderThreatBaseException(Exception):
         self,
         message: str = "An unexpected error occurred",
         error_code: str = "INTERNAL_ERROR",
-        details: dict[str, Any] | None = None,
+        details: Optional[Dict[str, Any]] = None,
     ) -> None:
         self.message = message
         self.error_code = error_code
         self.details = details or {}
         super().__init__(self.message)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """Serialize exception to dictionary for API responses."""
         return {
             "error_code": self.error_code,
@@ -83,7 +83,7 @@ class InsiderThreatBaseException(Exception):
 class ValidationError(InsiderThreatBaseException):
     """Raised when input validation fails."""
 
-    def __init__(self, message: str = "Validation failed", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Validation failed", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, error_code="VALIDATION_ERROR", details=details)
 
 
@@ -93,7 +93,7 @@ class ValidationError(InsiderThreatBaseException):
 class DatabaseError(InsiderThreatBaseException):
     """Base exception for database-related errors."""
 
-    def __init__(self, message: str = "Database error", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Database error", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, error_code="DATABASE_ERROR", details=details)
 
 
@@ -101,8 +101,8 @@ class DatabaseConnectionError(DatabaseError):
     """Raised when a database connection cannot be established."""
 
     def __init__(
-        self, message: str = "Database connection failed", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "Database connection failed", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "DATABASE_CONNECTION_ERROR"
 
@@ -111,8 +111,8 @@ class DatabaseQueryError(DatabaseError):
     """Raised when a database query fails."""
 
     def __init__(
-        self, message: str = "Database query failed", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "Database query failed", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "DATABASE_QUERY_ERROR"
 
@@ -123,7 +123,7 @@ class DatabaseQueryError(DatabaseError):
 class GraphError(InsiderThreatBaseException):
     """Base exception for graph-related errors."""
 
-    def __init__(self, message: str = "Graph error", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Graph error", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, error_code="GRAPH_ERROR", details=details)
 
 
@@ -131,8 +131,8 @@ class GraphBuildError(GraphError):
     """Raised when graph construction fails."""
 
     def __init__(
-        self, message: str = "Graph build failed", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "Graph build failed", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "GRAPH_BUILD_ERROR"
 
@@ -141,8 +141,8 @@ class GraphQueryError(GraphError):
     """Raised when a graph query fails."""
 
     def __init__(
-        self, message: str = "Graph query failed", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "Graph query failed", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "GRAPH_QUERY_ERROR"
 
@@ -153,14 +153,14 @@ class GraphQueryError(GraphError):
 class AIError(InsiderThreatBaseException):
     """Base exception for AI/ML-related errors."""
 
-    def __init__(self, message: str = "AI error", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "AI error", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, error_code="AI_ERROR", details=details)
 
 
 class ModelLoadError(AIError):
     """Raised when a model fails to load."""
 
-    def __init__(self, message: str = "Model load failed", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Model load failed", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "MODEL_LOAD_ERROR"
 
@@ -168,7 +168,7 @@ class ModelLoadError(AIError):
 class TrainingError(AIError):
     """Raised when model training encounters an error."""
 
-    def __init__(self, message: str = "Training failed", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Training failed", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "TRAINING_ERROR"
 
@@ -176,7 +176,7 @@ class TrainingError(AIError):
 class InferenceError(AIError):
     """Raised when model inference fails."""
 
-    def __init__(self, message: str = "Inference failed", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Inference failed", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "INFERENCE_ERROR"
 
@@ -188,8 +188,8 @@ class AuthenticationError(InsiderThreatBaseException):
     """Base exception for authentication errors."""
 
     def __init__(
-        self, message: str = "Authentication failed", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "Authentication failed", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, error_code="AUTH_ERROR", details=details)
 
 
@@ -197,8 +197,8 @@ class InvalidCredentialsError(AuthenticationError):
     """Raised when credentials are invalid."""
 
     def __init__(
-        self, message: str = "Invalid credentials", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "Invalid credentials", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "INVALID_CREDENTIALS"
 
@@ -206,7 +206,7 @@ class InvalidCredentialsError(AuthenticationError):
 class TokenExpiredError(AuthenticationError):
     """Raised when a JWT token has expired."""
 
-    def __init__(self, message: str = "Token expired", details: dict[str, Any] | None = None):
+    def __init__(self, message: str = "Token expired", details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(message=message, details=details)
         self.error_code = "TOKEN_EXPIRED"
 
@@ -218,6 +218,6 @@ class SystemError(InsiderThreatBaseException):
     """Raised for critical system-level errors."""
 
     def __init__(
-        self, message: str = "System error", details: dict[str, Any] | None = None
-    ):
+        self, message: str = "System error", details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(message=message, error_code="SYSTEM_ERROR", details=details)

@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from torch_geometric.data import HeteroData
-from typing import Dict, Union, List
+from typing import Any, Dict, Union, List
 
 class InferenceEngine:
     """
@@ -12,13 +12,13 @@ class InferenceEngine:
     Supports Single User, Batch, and Graph Predictions.
     Exports predictions to JSON or CSV.
     """
-    def __init__(self, model: nn.Module, device: torch.device):
+    def __init__(self, model: nn.Module, device: torch.device) -> None:
         self.model = model.to(device)
         self.model.eval()
         self.device = device
-        
+
     @torch.no_grad()
-    def predict_batch(self, data: HeteroData) -> dict:
+    def predict_batch(self, data: HeteroData) -> Dict[str, Any]:
         data = data.to(self.device)
         # Assuming autocast wasn't explicitly requested for inference but it's good practice
         with torch.cuda.amp.autocast(enabled=True):
@@ -47,7 +47,7 @@ class InferenceEngine:
             return float(probs[0])
         return 0.0
 
-    def export_predictions(self, predictions: dict, output_path: str, format: str = 'json'):
+    def export_predictions(self, predictions: Dict[str, Any], output_path: str, format: str = 'json') -> None:
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         
         # We need to flatten or restructure predictions for export

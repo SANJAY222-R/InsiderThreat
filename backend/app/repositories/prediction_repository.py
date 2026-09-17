@@ -1,13 +1,14 @@
+from typing import Any, Dict, List, Optional
 from sqlalchemy.orm import Session
 
 from backend.app.models.prediction import Prediction
 
 
 class PredictionRepository:
-    def get(self, db: Session, prediction_id: int):
+    def get(self, db: Session, prediction_id: int) -> Optional[Prediction]:
         return db.query(Prediction).filter(Prediction.id == prediction_id).first()
 
-    def get_by_employee(self, db: Session, employee_id: str, skip: int = 0, limit: int = 100):
+    def get_by_employee(self, db: Session, employee_id: str, skip: int = 0, limit: int = 100) -> List[Prediction]:
         return (
             db.query(Prediction)
             .filter(Prediction.employee_id == employee_id)
@@ -17,7 +18,7 @@ class PredictionRepository:
             .all()
         )
 
-    def get_all(self, db: Session, skip: int = 0, limit: int = 100):
+    def get_all(self, db: Session, skip: int = 0, limit: int = 100) -> List[Prediction]:
         return (
             db.query(Prediction)
             .order_by(Prediction.created_at.desc())
@@ -26,7 +27,7 @@ class PredictionRepository:
             .all()
         )
 
-    def count(self, db: Session):
+    def count(self, db: Session) -> int:
         return db.query(Prediction).count()
 
     def create(
@@ -35,10 +36,10 @@ class PredictionRepository:
         employee_id: str,
         risk_score: float,
         threat_level: str,
-        confidence: float | None = None,
+        confidence: Optional[float] = None,
         model_version: str = "1.0.0",
-        explanation: dict | None = None,
-    ):
+        explanation: Optional[Dict[str, Any]] = None,
+    ) -> Prediction:
         pred = Prediction(
             employee_id=employee_id,
             risk_score=risk_score,

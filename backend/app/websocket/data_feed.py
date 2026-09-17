@@ -42,7 +42,7 @@ def _load_pool(max_users: int = 200) -> None:
     http_path = os.path.join(DATASET_DIR, "clean_http.csv")
     file_path = os.path.join(DATASET_DIR, "clean_file.csv")
 
-    user_logons: Dict[str, List[dict]] = defaultdict(list)
+    user_logons: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
     user_devices: Dict[str, int] = defaultdict(int)
     user_http_external: Dict[str, int] = defaultdict(int)
     user_files: Dict[str, float] = defaultdict(float)
@@ -131,7 +131,7 @@ def _next_event() -> Dict[str, Any]:
     return event
 
 
-async def stream_threat_events(manager, interval_seconds: float = 4.0) -> None:
+async def stream_threat_events(manager: Any, interval_seconds: float = 4.0) -> None:
     """
     Background task: stream real threat predictions to WebSocket clients.
 

@@ -6,8 +6,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class RecommendationsGenerator(BaseEntityModule):
     """Module 12: Phase 5 Recommendations"""
-    
-    def run(self):
+
+    def run(self) -> None:
         rec_path = os.path.join(self.cfg.paths.reports_dir, "phase5_recommendations.md")
         
         with open(rec_path, "w") as f:

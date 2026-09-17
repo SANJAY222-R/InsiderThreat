@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import polars as pl
 from .base_extractor import BaseEntityModule
 import logging
@@ -6,8 +7,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class EntityValidator(BaseEntityModule):
     """Module 9: Entity Validation"""
-    
-    def run(self, entities: dict) -> dict:
+
+    def run(self, entities: Dict[str, Any]) -> Dict[str, Any]:
         for k, df in entities.items():
             if df.is_empty():
                 continue

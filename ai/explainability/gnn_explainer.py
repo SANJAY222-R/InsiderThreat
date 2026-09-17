@@ -18,7 +18,7 @@ class GNNExplainerWrapper(BaseExplainer):
     with respect to the model's threat prediction.
     """
 
-    def __init__(self, top_k_edges: int = 10):
+    def __init__(self, top_k_edges: int = 10) -> None:
         super().__init__(name="GNNExplainer")
         self.top_k_edges = top_k_edges
 

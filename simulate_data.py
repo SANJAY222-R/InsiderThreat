@@ -15,13 +15,14 @@ Usage:
 import sys
 import os
 import argparse
+from typing import Any, Dict, List
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from scripts.simulate_data_flow import load_cert_events, simulate_pipeline, print_summary, save_results
 
 
-def run_scenario(scenario: str, user: str, events: int = 10, post_to_api: bool = False):
+def run_scenario(scenario: str, user: str, events: int = 10, post_to_api: bool = False) -> List[Dict[str, Any]]:
     scenarios = {
         "exfiltration": {
             "is_after_hours": 1.0,
@@ -69,7 +70,7 @@ def run_scenario(scenario: str, user: str, events: int = 10, post_to_api: bool =
     return results
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Simulate CERT data flow and attack scenarios")
     parser.add_argument("--scenario", type=str, choices=["exfiltration", "email_leak", "auth_spike", "custom"], help="Attack scenario to inject")
     parser.add_argument("--user", type=str, default="MOH0273", help="Target user ID for scenario (default: MOH0273)")

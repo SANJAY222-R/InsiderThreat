@@ -9,14 +9,14 @@ class TestModelLoading:
     """Tests for model checkpoint loading."""
 
     @pytest.mark.slow
-    def test_model_loads_from_checkpoint(self):
+    def test_model_loads_from_checkpoint(self) -> None:
         """Should load model weights from checkpoint file."""
         from ai.inference.predictor import Predictor
         predictor = Predictor()
         assert predictor is not None
         assert predictor.model_version == "1.0.0"
 
-    def test_predictor_returns_valid_risk_score(self):
+    def test_predictor_returns_valid_risk_score(self) -> None:
         from ai.inference.predictor import Predictor
         predictor = Predictor()
         result = predictor.predict("MOH0273")
@@ -24,7 +24,7 @@ class TestModelLoading:
         assert 0.0 <= result["risk_score"] <= 100.0
         assert result["threat_level"] in ("CRITICAL", "HIGH", "MEDIUM", "LOW")
 
-    def test_predictor_feature_importance_present(self):
+    def test_predictor_feature_importance_present(self) -> None:
         from ai.inference.predictor import Predictor
         predictor = Predictor()
         result = predictor.predict(
@@ -43,7 +43,7 @@ class TestModelLoading:
         assert "feature_importance" in explanation
         assert len(explanation["feature_importance"]) > 0
 
-    def test_predictor_high_risk_context_yields_high_score(self):
+    def test_predictor_high_risk_context_yields_high_score(self) -> None:
         from ai.inference.predictor import Predictor
         predictor = Predictor()
         result = predictor.predict(
@@ -64,7 +64,7 @@ class TestModelLoading:
 class TestXAIExplainers:
     """Tests for the three XAI explainer modules."""
 
-    def test_feature_importance_explain(self):
+    def test_feature_importance_explain(self) -> None:
         from ai.explainability.feature_importance import FeatureImportance
         explainer = FeatureImportance()
         result = explainer.explain("MOH0273", context={"risk_score": 94.2})
@@ -75,7 +75,7 @@ class TestXAIExplainers:
         for val in attributions.values():
             assert isinstance(val, float)
 
-    def test_feature_importance_counterfactuals(self):
+    def test_feature_importance_counterfactuals(self) -> None:
         from ai.explainability.feature_importance import FeatureImportance
         explainer = FeatureImportance()
         result = explainer.explain("MOH0273", context={"risk_score": 94.2})
@@ -84,7 +84,7 @@ class TestXAIExplainers:
         assert isinstance(cfs, list)
         assert len(cfs) > 0
 
-    def test_gnn_explainer_returns_subgraph(self):
+    def test_gnn_explainer_returns_subgraph(self) -> None:
         from ai.explainability.gnn_explainer import GNNExplainerWrapper
         explainer = GNNExplainerWrapper()
         result = explainer.explain("MOH0273", context={"risk_score": 94.2})
@@ -93,14 +93,14 @@ class TestXAIExplainers:
         assert isinstance(result["nodes"], list)
         assert isinstance(result["edges"], list)
 
-    def test_gnn_nodes_have_required_fields(self):
+    def test_gnn_nodes_have_required_fields(self) -> None:
         from ai.explainability.gnn_explainer import GNNExplainerWrapper
         explainer = GNNExplainerWrapper()
         result = explainer.explain("MOH0273", context={"risk_score": 94.2})
         for node in result["nodes"]:
             assert "id" in node or "node_id" in node
 
-    def test_attention_explainer_returns_heads(self):
+    def test_attention_explainer_returns_heads(self) -> None:
         from ai.explainability.attention_explainer import AttentionExplainer
         explainer = AttentionExplainer()
         result = explainer.explain("MOH0273", context={"risk_score": 94.2})
@@ -108,7 +108,7 @@ class TestXAIExplainers:
         assert isinstance(result["attention_heads"], list)
         assert len(result["attention_heads"]) > 0
 
-    def test_attention_heads_sum_to_one(self):
+    def test_attention_heads_sum_to_one(self) -> None:
         from ai.explainability.attention_explainer import AttentionExplainer
         explainer = AttentionExplainer()
         result = explainer.explain("MOH0273", context={"risk_score": 94.2})

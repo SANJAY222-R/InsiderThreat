@@ -1,4 +1,5 @@
 import os
+from typing import Any, Dict
 from .base_extractor import BaseEntityModule
 import logging
 
@@ -6,8 +7,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class DocumentationGenerator(BaseEntityModule):
     """Module 10: Entity Documentation"""
-    
-    def run(self, entities: dict):
+
+    def run(self, entities: Dict[str, Any]) -> None:
         doc_path = os.path.join(self.cfg.paths.docs_dir, "entity_documentation.md")
         
         with open(doc_path, "w") as f:

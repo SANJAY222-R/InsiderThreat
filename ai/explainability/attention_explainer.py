@@ -17,7 +17,7 @@ class AttentionExplainer(BaseExplainer):
     Extracts attention weights across multi-head graph attention mechanisms.
     """
 
-    def __init__(self, num_heads: int = 8):
+    def __init__(self, num_heads: int = 8) -> None:
         super().__init__(name="AttentionExplainer")
         self.num_heads = num_heads
 

@@ -1,3 +1,4 @@
+from typing import Dict
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -9,7 +10,7 @@ __all__ = ["setup_error_handler"]
 
 logger = get_logger("error")
 
-_STATUS_MAP: dict[str, int] = {
+_STATUS_MAP: Dict[str, int] = {
     "AUTH_ERROR": 401,
     "INVALID_CREDENTIALS": 401,
     "TOKEN_EXPIRED": 401,
@@ -31,7 +32,7 @@ _STATUS_MAP: dict[str, int] = {
 
 def setup_error_handler(app: FastAPI) -> None:
     @app.exception_handler(InsiderThreatBaseException)
-    async def custom_exception_handler(request: Request, exc: InsiderThreatBaseException):
+    async def custom_exception_handler(request: Request, exc: InsiderThreatBaseException) -> JSONResponse:
         status_code = _STATUS_MAP.get(exc.error_code, 500)
         logger.error(f"{exc.error_code}: {exc.message}", extra={"details": exc.details, "path": str(request.url)})
         return JSONResponse(
@@ -40,7 +41,7 @@ def setup_error_handler(app: FastAPI) -> None:
         )
 
     @app.exception_handler(Exception)
-    async def unhandled_exception_handler(request: Request, exc: Exception):
+    async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
         logger.exception(f"Unhandled exception on {request.method} {request.url}")
         return JSONResponse(
             status_code=500,

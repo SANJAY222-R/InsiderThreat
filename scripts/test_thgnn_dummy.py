@@ -5,7 +5,7 @@ import yaml
 from ai.models.thgnn import THGNN
 from ai.data.dataset_loader import GraphDatasetLoader
 
-def test_thgnn():
+def test_thgnn() -> None:
     with open("configs/model.yaml", "r") as f:
         config = yaml.safe_load(f)
 

@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
@@ -14,7 +16,7 @@ predictor = Predictor(model_version="1.0.0")
 
 @router.post("/predict", response_model=PredictionResponse, status_code=201)
 @router.post("/", response_model=PredictionResponse, status_code=201)
-def create_prediction(req: PredictionRequest, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def create_prediction(req: PredictionRequest, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Prediction:
     result = predictor.predict(employee_id=req.employee_id, context=req.context)
 
     prediction = Prediction(
@@ -31,14 +33,14 @@ def create_prediction(req: PredictionRequest, db: Session = Depends(get_db), _: 
     return prediction
 
 
-@router.get("/", response_model=list[PredictionResponse])
+@router.get("/", response_model=List[PredictionResponse])
 def list_predictions(
     skip: int = 0,
     limit: int = 50,
-    employee_id: str | None = Query(default=None),
+    employee_id: Optional[str] = Query(default=None),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_user),
-):
+) -> List[Prediction]:
     query = db.query(Prediction)
     if employee_id:
         query = query.filter(Prediction.employee_id == employee_id)
@@ -46,7 +48,7 @@ def list_predictions(
 
 
 @router.get("/{prediction_id}", response_model=PredictionResponse)
-def get_prediction(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)):
+def get_prediction(prediction_id: int, db: Session = Depends(get_db), _: User = Depends(get_current_user)) -> Prediction:
     prediction = db.query(Prediction).filter(Prediction.id == prediction_id).first()
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")

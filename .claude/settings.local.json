@@ -22,7 +22,16 @@
       "Bash(PYTHONUTF8=1 ./backend/venv/Scripts/python.exe *)",
       "Bash(git check-ignore *)",
       "Bash(git status *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(python -V)",
+      "Bash(pip list *)",
+      "Bash(pip install *)",
+      "Bash(PYTHONPATH=. python3 *)",
+      "Bash(alembic init *)",
+      "Bash(DATABASE_URL=\"sqlite:///test_alembic_init.db\" alembic revision *)",
+      "Bash(DATABASE_URL=\"sqlite:///test_alembic_run.db\" alembic upgrade *)",
+      "Bash(DATABASE_URL=\"sqlite:///test_alembic_run.db\" alembic downgrade base)",
+      "Bash(DATABASE_URL=\"sqlite:////tmp/test_alembic.db\" alembic upgrade head && DATABASE_URL=\"sqlite:////tmp/test_alembic.db\" alembic downgrade base && DATABASE_URL=\"sqlite:////tmp/test_alembic.db\" alembic upgrade head && rm -f /tmp/test_alembic.db)"
     ]
   }
 }

@@ -1,7 +1,7 @@
 from threat_detection.detection_engine import DetectionEngine
 import os
 
-def test_engine():
+def test_engine() -> None:
     print("Initializing Detection Engine...")
     engine = DetectionEngine(config_path="configs/detection_config.yaml")
     

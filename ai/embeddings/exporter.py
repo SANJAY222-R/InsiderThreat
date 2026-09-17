@@ -9,11 +9,11 @@ class EmbeddingExporter:
     Exports Node, Graph, User, and Session embeddings 
     to NumPy, PyTorch, or CSV formats.
     """
-    def __init__(self, output_dir: str = 'ai/embeddings'):
+    def __init__(self, output_dir: str = 'ai/embeddings') -> None:
         self.output_dir = output_dir
         os.makedirs(self.output_dir, exist_ok=True)
-        
-    def export(self, embeddings_dict: Dict[str, Any], prefix: str = 'emb', format: str = 'npy'):
+
+    def export(self, embeddings_dict: Dict[str, Any], prefix: str = 'emb', format: str = 'npy') -> None:
         """
         embeddings_dict: Dict where keys are node types (or 'graph') and values are tensors/arrays.
         """

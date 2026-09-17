@@ -1,16 +1,17 @@
 import torch
 import torch.nn as nn
 from torch_geometric.nn import global_mean_pool, global_max_pool, GlobalAttention
+from typing import Dict, Optional, Any
 
 class GraphPooling(nn.Module):
     """
     Graph pooling module supporting Global Mean, Global Max, and Attention Pooling.
     Generates graph-level or session-level embeddings.
     """
-    def __init__(self, hidden_dim: int, pooling_type: str = 'attention'):
+    def __init__(self, hidden_dim: int, pooling_type: str = 'attention') -> None:
         super().__init__()
         self.pooling_type = pooling_type
-        
+
         if pooling_type == 'attention':
             gate_nn = nn.Sequential(
                 nn.Linear(hidden_dim, hidden_dim),
@@ -18,8 +19,8 @@ class GraphPooling(nn.Module):
                 nn.Linear(hidden_dim, 1)
             )
             self.pool = GlobalAttention(gate_nn=gate_nn)
-            
-    def forward(self, x_dict: dict, batch_dict: dict | None = None) -> torch.Tensor:
+
+    def forward(self, x_dict: Dict[str, torch.Tensor], batch_dict: Optional[Dict[str, torch.Tensor]] = None) -> torch.Tensor:
         """
         Pools across all nodes in the heterogeneous graph to create a graph embedding.
         """

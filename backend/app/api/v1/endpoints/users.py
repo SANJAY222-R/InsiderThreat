@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -9,13 +11,13 @@ from backend.app.schemas.user import UserResponse, UserUpdate
 router = APIRouter()
 
 
-@router.get("/", response_model=list[UserResponse])
-def list_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: User = Depends(get_current_admin)):
+@router.get("/", response_model=List[UserResponse])
+def list_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), _: User = Depends(get_current_admin)) -> List[User]:
     return db.query(User).offset(skip).limit(limit).all()
 
 
 @router.get("/{user_id}", response_model=UserResponse)
-def get_user(user_id: str, db: Session = Depends(get_db), _: User = Depends(get_current_admin)):
+def get_user(user_id: str, db: Session = Depends(get_db), _: User = Depends(get_current_admin)) -> User:
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -23,7 +25,7 @@ def get_user(user_id: str, db: Session = Depends(get_db), _: User = Depends(get_
 
 
 @router.put("/{user_id}", response_model=UserResponse)
-def update_user(user_id: str, user_in: UserUpdate, db: Session = Depends(get_db), _: User = Depends(get_current_admin)):
+def update_user(user_id: str, user_in: UserUpdate, db: Session = Depends(get_db), _: User = Depends(get_current_admin)) -> User:
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -36,7 +38,7 @@ def update_user(user_id: str, user_in: UserUpdate, db: Session = Depends(get_db)
 
 
 @router.delete("/{user_id}", response_model=UserResponse)
-def deactivate_user(user_id: str, db: Session = Depends(get_db), _: User = Depends(get_current_admin)):
+def deactivate_user(user_id: str, db: Session = Depends(get_db), _: User = Depends(get_current_admin)) -> User:
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

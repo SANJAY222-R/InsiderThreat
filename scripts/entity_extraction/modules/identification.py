@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import polars as pl
 from .base_extractor import BaseEntityModule
 import logging
@@ -6,8 +7,8 @@ logger = logging.getLogger("EntityExtraction")
 
 class EntityIdentifier(BaseEntityModule):
     """Module 1: Entity Identification"""
-    
-    def run(self) -> dict:
+
+    def run(self) -> Dict[str, Any]:
         entities = {
             "users": set(),
             "hosts": set(),

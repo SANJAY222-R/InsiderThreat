@@ -12,7 +12,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 __all__ = ["EarlyStopping", "ModelCheckpoint", "MetricLogger"]
 
@@ -24,7 +24,7 @@ class EarlyStopping:
     Early stopping to terminate training when validation loss stops improving.
     """
 
-    def __init__(self, patience: int = 5, min_delta: float = 1e-4, mode: str = "min"):
+    def __init__(self, patience: int = 5, min_delta: float = 1e-4, mode: str = "min") -> None:
         self.patience = patience
         self.min_delta = min_delta
         self.mode = mode
@@ -69,7 +69,7 @@ class ModelCheckpoint:
         save_best_only: bool = True,
         monitor: str = "val_loss",
         mode: str = "min",
-    ):
+    ) -> None:
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         self.save_best_only = save_best_only
@@ -114,11 +114,11 @@ class MetricLogger:
     Logs epoch metrics and history to console and JSON lines.
     """
 
-    def __init__(self, log_file: Optional[Union[str, Path]] = None):
+    def __init__(self, log_file: Optional[Union[str, Path]] = None) -> None:
         self.log_file = Path(log_file) if log_file else None
-        self.history: list[Dict[str, Any]] = []
+        self.history: List[Dict[str, Any]] = []
 
-    def log_epoch(self, epoch: int, train_metrics: Dict[str, float], val_metrics: Optional[Dict[str, float]] = None):
+    def log_epoch(self, epoch: int, train_metrics: Dict[str, float], val_metrics: Optional[Dict[str, float]] = None) -> None:
         """
         Record and display metrics for an epoch.
         """

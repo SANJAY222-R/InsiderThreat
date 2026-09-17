@@ -25,7 +25,7 @@ class Evaluator:
     - Full Confusion Matrix (TP, FP, TN, FN)
     """
 
-    def __init__(self, threshold: float = 0.5):
+    def __init__(self, threshold: float = 0.5) -> None:
         self.threshold = threshold
 
     def compute_confusion_matrix(

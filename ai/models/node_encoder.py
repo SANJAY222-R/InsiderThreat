@@ -30,7 +30,7 @@ class NodeEncoder:
         hidden_dim: int = 128,
         node_types: Optional[List[str]] = None,
         feature_dims: Optional[Dict[str, int]] = None,
-    ):
+    ) -> None:
         self.hidden_dim = hidden_dim
         self.node_types = node_types or ["user", "host", "device", "file", "email", "usb", "session", "department"]
         self.feature_dims = feature_dims or {

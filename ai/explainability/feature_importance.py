@@ -17,7 +17,7 @@ class FeatureImportance(BaseExplainer):
     Computes feature attributions and counterfactual projections.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(name="FeatureImportance")
         self.feature_metadata = {
             "is_after_hours": {

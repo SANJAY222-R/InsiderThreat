@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timezone
+from typing import Any, Dict
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -16,7 +17,7 @@ router = APIRouter()
 
 
 @router.post("/login", response_model=Token)
-async def login(request: Request, db: Session = Depends(get_db)):
+async def login(request: Request, db: Session = Depends(get_db)) -> Dict[str, Any]:
     username = None
     password = None
 
@@ -56,7 +57,7 @@ async def login(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/register", response_model=UserResponse)
-def register(user_in: UserCreate, db: Session = Depends(get_db)):
+def register(user_in: UserCreate, db: Session = Depends(get_db)) -> User:
     if db.query(User).filter(User.username == user_in.username).first():
         raise HTTPException(status_code=400, detail="Username already registered")
     if user_in.email and db.query(User).filter(User.email == user_in.email).first():
@@ -77,5 +78,5 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=UserResponse)
-def get_me(current_user: User = Depends(get_current_user)):
+def get_me(current_user: User = Depends(get_current_user)) -> User:
     return current_user

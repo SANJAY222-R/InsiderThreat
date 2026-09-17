@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, Dict, List
 from fastapi import APIRouter, Depends, Query
 
 from backend.app.auth.dependencies import get_current_user
@@ -16,14 +16,14 @@ router = APIRouter()
 
 
 @router.get("/samples", response_model=List[SampleEntity])
-def get_sample_entities(_: User = Depends(get_current_user)):
+def get_sample_entities(_: User = Depends(get_current_user)) -> List[Dict[str, Any]]:
     """Return a curated list of active entity IDs for easy graph navigation."""
     service = get_graph_service()
     return service.get_sample_entities()
 
 
 @router.post("/query", response_model=GraphQueryResponse)
-def query_graph(req: GraphQueryRequest, _: User = Depends(get_current_user)):
+def query_graph(req: GraphQueryRequest, _: User = Depends(get_current_user)) -> GraphQueryResponse:
     """Extract neighborhood graph around a specific node up to N hops."""
     service = get_graph_service()
     res = service.query_neighborhood(
@@ -36,7 +36,7 @@ def query_graph(req: GraphQueryRequest, _: User = Depends(get_current_user)):
 
 
 @router.post("/subgraph", response_model=GraphQueryResponse)
-def extract_subgraph(req: SubgraphRequest, _: User = Depends(get_current_user)):
+def extract_subgraph(req: SubgraphRequest, _: User = Depends(get_current_user)) -> GraphQueryResponse:
     """Extract temporal interaction subgraph."""
     service = get_graph_service()
     res = service.extract_subgraph(
@@ -49,7 +49,7 @@ def extract_subgraph(req: SubgraphRequest, _: User = Depends(get_current_user)):
 
 
 @router.post("/event")
-def add_graph_event(req: AddEventRequest, _: User = Depends(get_current_user)):
+def add_graph_event(req: AddEventRequest, _: User = Depends(get_current_user)) -> Dict[str, str]:
     """Dynamically inject an event into the live heterogeneous graph."""
     service = get_graph_service()
     service.add_custom_event(

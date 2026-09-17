@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     backend_workers: int = 4
 
     database_url: str = "sqlite:///./insider_threat.db"
+    db_pool_size: int = 10
+    db_max_overflow: int = 20
+    db_pool_recycle: int = 300
+    db_pool_timeout: int = 30
+    db_pool_pre_ping: bool = True
+    db_echo: bool = False
 
     neo4j_uri: str = "bolt://localhost:7687"
     neo4j_user: str = "neo4j"

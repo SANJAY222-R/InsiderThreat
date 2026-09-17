@@ -1,3 +1,4 @@
+from typing import Any, Optional
 import polars as pl
 from .base_extractor import BaseExtractor
 import logging
@@ -6,11 +7,11 @@ logger = logging.getLogger("FeatureEngineering")
 
 class TemporalExtractor(BaseExtractor):
     """Module 6: Temporal Features"""
-    
-    def __init__(self, cfg):
+
+    def __init__(self, cfg: Any) -> None:
         super().__init__("temporal_features", cfg)
-        
-    def run(self) -> pl.DataFrame | None:
+
+    def run(self) -> Optional[pl.DataFrame]:
         df = self.load_clean_data("logon")
         if df is None:
             logger.warning("clean_logon.csv not found.")

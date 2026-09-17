@@ -18,7 +18,7 @@ from ai.explainability.attention_explainer import AttentionExplainer
 from ai.inference.predictor import Predictor
 
 
-def test_feature_importance(employee_id: str, risk_score: float):
+def test_feature_importance(employee_id: str, risk_score: float) -> None:
     print(f"\n{'='*60}")
     print(f"FEATURE IMPORTANCE EXPLAINER — {employee_id}")
     print(f"{'='*60}")
@@ -40,7 +40,7 @@ def test_feature_importance(employee_id: str, risk_score: float):
             print(f"  - {scenario}: risk would drop by {abs(delta):.1f} pts")
 
 
-def test_gnn_explainer(employee_id: str, risk_score: float):
+def test_gnn_explainer(employee_id: str, risk_score: float) -> None:
     print(f"\n{'='*60}")
     print(f"GNN SUBGRAPH EXPLAINER — {employee_id}")
     print(f"{'='*60}")
@@ -67,7 +67,7 @@ def test_gnn_explainer(employee_id: str, risk_score: float):
         print(f"  {src} -> {tgt}  weight={w:.3f}")
 
 
-def test_attention_explainer(employee_id: str, risk_score: float):
+def test_attention_explainer(employee_id: str, risk_score: float) -> None:
     print(f"\n{'='*60}")
     print(f"ATTENTION EXPLAINER — {employee_id}")
     print(f"{'='*60}")
@@ -90,7 +90,7 @@ def test_attention_explainer(employee_id: str, risk_score: float):
             print(f"    └─ {focus}")
 
 
-def run_full_pipeline(employee_id: str, risk_score: float):
+def run_full_pipeline(employee_id: str, risk_score: float) -> None:
     print(f"\n{'#'*60}")
     print(f"FULL XAI PIPELINE — {employee_id}  (Risk Score: {risk_score})")
     print(f"{'#'*60}")
