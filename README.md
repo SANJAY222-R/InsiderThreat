@@ -900,7 +900,7 @@ python3 -c "import fastapi" 2>&1
 ### License
 
 This project is open-source software licensed under the **[MIT License](LICENSE)**.
-
+uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
 ---
 
 <div align="center">

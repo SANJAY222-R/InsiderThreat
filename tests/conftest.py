@@ -6,27 +6,38 @@ PyTest fixtures providing TestClient, in-memory DB, auth headers, and sample dat
 """
 
 import os
+import tempfile
+from collections.abc import Generator
+from pathlib import Path
+from typing import Any, cast
+
+import httpx
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Engine, create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 from backend.app.database.database import Base, get_db
-from backend.app.models import User, Prediction, Alert, AuditLog
 from backend.app.database.seed import seed_db_with_engine
+from backend.app.models import Alert, AuditLog, Prediction, User
 
-TEST_DB_PATH = "/tmp/test.db"
-TEST_DB_URL = f"sqlite:///{TEST_DB_PATH}"
+TEST_DB_PATH = os.path.join(tempfile.gettempdir(), "test.db")
+TEST_DB_URL = f"sqlite:///{Path(TEST_DB_PATH).as_posix()}"
 
-# Remove existing test db in /tmp if present
+# Remove existing test db if present
 if os.path.exists(TEST_DB_PATH):
     try:
         os.remove(TEST_DB_PATH)
     except Exception:
         pass
 
-_test_engine = create_engine(TEST_DB_URL, connect_args={"check_same_thread": False})
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_test_engine)
+_test_engine: Engine = create_engine(TEST_DB_URL, connect_args={"check_same_thread": False})
+TestingSessionLocal: sessionmaker[Session] = sessionmaker(
+    autocommit=False, autoflush=False, bind=_test_engine
+)
+
+# Reference models to ensure metadata registration and avoid unused import warnings
+_ = (User, Prediction, Alert, AuditLog)
 
 __all__ = [
     "client",
@@ -39,7 +50,7 @@ __all__ = [
 ]
 
 
-def override_get_db():
+def override_get_db() -> Generator[Session, None, None]:
     db = TestingSessionLocal()
     try:
         yield db
@@ -48,16 +59,21 @@ def override_get_db():
 
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_test_database():
-    Base.metadata.create_all(bind=_test_engine)
+def setup_test_database() -> Generator[None, None, None]:
+    with _test_engine.begin() as conn:
+        Base.metadata.create_all(bind=cast(Any, conn))
     seed_db_with_engine(_test_engine)
     yield
-    Base.metadata.drop_all(bind=_test_engine)
+    with _test_engine.begin() as conn:
+        Base.metadata.drop_all(bind=cast(Any, conn))
+    _test_engine.dispose()
 
 
 @pytest.fixture(scope="session")
-def client(setup_test_database):
+def client(setup_test_database: None) -> Generator[TestClient, None, None]:
+    _ = setup_test_database
     from backend.app.main import app
+
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c
@@ -65,7 +81,8 @@ def client(setup_test_database):
 
 
 @pytest.fixture(scope="session")
-def db_session(setup_test_database):
+def db_session(setup_test_database: None) -> Generator[Session, None, None]:
+    _ = setup_test_database
     db = TestingSessionLocal()
     try:
         yield db
@@ -74,33 +91,39 @@ def db_session(setup_test_database):
 
 
 @pytest.fixture(scope="session")
-def auth_headers(client):
+def auth_headers(client: TestClient) -> dict[str, str]:
     """Admin auth token obtained via login endpoint."""
-    response = client.post(
+    response: httpx.Response = client.post(
         "/api/v1/auth/login",
         json={"username": "admin", "password": "admin123"},
     )
     if response.status_code == 200:
-        token = response.json().get("access_token", "")
-        return {"Authorization": f"Bearer {token}"}
-    return {}
+        json_data = response.json()
+        if isinstance(json_data, dict):
+            token = str(json_data.get("access_token", ""))
+            return {"Authorization": f"Bearer {token}"}
+    empty_headers: dict[str, str] = {}
+    return empty_headers
 
 
 @pytest.fixture(scope="session")
-def analyst_auth_headers(client):
+def analyst_auth_headers(client: TestClient) -> dict[str, str]:
     """Analyst auth token obtained via login endpoint."""
-    response = client.post(
+    response: httpx.Response = client.post(
         "/api/v1/auth/login",
         json={"username": "analyst", "password": "password123"},
     )
     if response.status_code == 200:
-        token = response.json().get("access_token", "")
-        return {"Authorization": f"Bearer {token}"}
-    return {}
+        json_data = response.json()
+        if isinstance(json_data, dict):
+            token = str(json_data.get("access_token", ""))
+            return {"Authorization": f"Bearer {token}"}
+    empty_headers: dict[str, str] = {}
+    return empty_headers
 
 
 @pytest.fixture
-def app_settings():
+def app_settings() -> dict[str, str]:
     return {
         "app_env": "testing",
         "database_url": TEST_DB_URL,
@@ -109,7 +132,7 @@ def app_settings():
 
 
 @pytest.fixture
-def sample_user_data():
+def sample_user_data() -> dict[str, str]:
     return {
         "username": "test_analyst",
         "email": "analyst@test.com",
@@ -119,7 +142,7 @@ def sample_user_data():
 
 
 @pytest.fixture
-def sample_prediction_payload():
+def sample_prediction_payload() -> dict[str, object]:
     return {
         "employee_id": "MOH0273",
         "context": {

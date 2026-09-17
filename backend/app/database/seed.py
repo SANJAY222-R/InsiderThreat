@@ -9,7 +9,9 @@ from backend.app.models.alert import Alert
 from backend.app.models.prediction import Prediction
 
 
-def seed_db_with_engine(target_engine) -> None:
+from typing import Any
+
+def seed_db_with_engine(target_engine: Any) -> None:
     """Seed database using a specific SQLAlchemy engine."""
     from sqlalchemy.orm import sessionmaker
     Session = sessionmaker(autocommit=False, autoflush=False, bind=target_engine)

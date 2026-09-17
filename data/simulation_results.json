@@ -938,5 +938,475 @@
       "subgraph_edges": 5,
       "attention_heads": 8
     }
+  },
+  {
+    "employee_id": "agb0186",
+    "risk_score": 23.87,
+    "threat_level": "LOW",
+    "confidence": 0.874,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.2333,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 4.9
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 9.7
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "agb0643",
+    "risk_score": 25.64,
+    "threat_level": "LOW",
+    "confidence": 0.876,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.4545,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 6.6
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 11.4
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "ahc0142",
+    "risk_score": 37.6,
+    "threat_level": "MEDIUM",
+    "confidence": 0.888,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 10.0,
+      "email_external_ratio": 0.4498,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 9.1
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 18.6
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 23.4
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "ahd0848",
+    "risk_score": 45.61,
+    "threat_level": "MEDIUM",
+    "confidence": 0.896,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 10.0,
+      "file_download_bytes_mb": 0.0359,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.3333,
+      "device_switching_count": 0.8408
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 17.1
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 26.6
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 31.4
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "ahg0634",
+    "risk_score": 25.56,
+    "threat_level": "LOW",
+    "confidence": 0.876,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.4444,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 6.6
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 11.4
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "ahm0410",
+    "risk_score": 59.59,
+    "threat_level": "MEDIUM",
+    "confidence": 0.91,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 10.0,
+      "file_download_bytes_mb": 0.3923,
+      "sensitive_resource_access": 10.0,
+      "email_external_ratio": 0.2918,
+      "device_switching_count": 2.0769
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 31.1
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 40.6
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 45.4
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "aib0948",
+    "risk_score": 50.29,
+    "threat_level": "MEDIUM",
+    "confidence": 0.9,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 10.0,
+      "file_download_bytes_mb": 0.2964,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.3,
+      "device_switching_count": 5.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 21.8
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 31.3
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 36.1
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "aih0675",
+    "risk_score": 5.0,
+    "threat_level": "LOW",
+    "confidence": 0.855,
+    "context": {
+      "is_after_hours": 0.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.3916,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 0.0
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "aim0627",
+    "risk_score": 15.07,
+    "threat_level": "LOW",
+    "confidence": 0.865,
+    "context": {
+      "is_after_hours": 0.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 6.0,
+      "email_external_ratio": 0.3841,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 0.9
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
+  },
+  {
+    "employee_id": "aip0394",
+    "risk_score": 24.92,
+    "threat_level": "LOW",
+    "confidence": 0.875,
+    "context": {
+      "is_after_hours": 1.0,
+      "failed_login_ratio": 0.0,
+      "usb_insertion_count": 0.0,
+      "file_download_bytes_mb": 0.0,
+      "sensitive_resource_access": 0.0,
+      "email_external_ratio": 0.365,
+      "device_switching_count": 0.0
+    },
+    "explanation": {
+      "feature_importance": {
+        "is_after_hours": 0.0031,
+        "usb_insertion_count": 0.0083,
+        "file_download_bytes_mb": 0.988,
+        "failed_login_ratio": 0.0005,
+        "sensitive_resource_access": 0.0
+      },
+      "counterfactuals": [
+        {
+          "scenario": "Eliminate Off-Hours Activity",
+          "description": "What if events occurred strictly between 09:00 - 17:00?",
+          "risk_delta": -28.5,
+          "projected_risk": 0.0
+        },
+        {
+          "scenario": "Revoke Removable Media Access",
+          "description": "What if USB exfiltration capability is disabled?",
+          "risk_delta": -19.0,
+          "projected_risk": 5.9
+        },
+        {
+          "scenario": "Cap File Download Bandwidth",
+          "description": "What if bulk download volume is throttled to < 20MB?",
+          "risk_delta": -14.2,
+          "projected_risk": 10.7
+        }
+      ],
+      "subgraph_nodes": 6,
+      "subgraph_edges": 5,
+      "attention_heads": 8
+    }
   }
 ]
