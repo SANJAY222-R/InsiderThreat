@@ -173,6 +173,55 @@ flowchart TD
 
 ---
 
+### ⚡ Real-Time Data Streaming & WebSocket Engine (`/ws`)
+
+The application features a built-in, continuous live data simulation pipeline that runs concurrently with the REST API:
+
+```text
+┌─────────────────────────┐     ┌────────────────────────┐     ┌───────────────────────┐
+│ dataset/processed/ CSVs │ ──▶ │ Event Pool Loader      │ ──▶ │ THGNN Neural Engine   │
+│ (logon, device, http)   │     │ (backend/data_feed.py) │     │ (Predictor.predict()) │
+└─────────────────────────┘     └────────────────────────┘     └───────────┬───────────┘
+                                                                           │
+                                ┌────────────────────────┐                 ▼
+┌─────────────────────────┐     │ ConnectionManager      │ ◀── ┌───────────────────────┐
+│ React Command Center UI │ ◀── │ Broadcast Hub (/ws)    │     │ WebSocket Payload     │
+│ (useWebSocket.ts)       │     │ (backend/manager.py)   │     │ (Risk, Top Attribs)   │
+└─────────────────────────┘     └────────────────────────┘     └───────────────────────┘
+```
+
+1. **Lifespan Background Broadcaster (`backend/app/main.py`)**:
+   On backend startup, FastAPI spawns a non-blocking asynchronous task (`stream_threat_events`) via the application lifespan manager that executes every `4.0` seconds.
+2. **CERT Event Pool Ingestion (`backend/app/websocket/data_feed.py`)**:
+   Loads preprocessed telemetry from `dataset/processed/clean_*.csv`, extracting multi-modal behavioral contexts (after-hours ratios, failed logins, USB insertions, file bytes, and outbound data exfiltration indicators) across 200+ employee entities.
+3. **In-Flight THGNN Inference & Auto-Alerting**:
+   Every broadcast cycle evaluates the next employee context with the `Predictor` engine. If the computed risk score falls in `HIGH` or `CRITICAL` bands, a structured alert with primary causal indicators is synthesized.
+4. **WebSocket Payload Schema**:
+   ```json
+   {
+     "type": "threat_prediction",
+     "timestamp": "2026-09-17T14:30:00.000000",
+     "employee_id": "MOH0273",
+     "risk_score": 78.8,
+     "threat_level": "HIGH",
+     "confidence": 0.925,
+     "top_features": [
+       { "name": "usb_insertion_count", "value": 8.0, "attribution": 0.42 },
+       { "name": "file_download_bytes_mb", "value": 850.0, "attribution": 0.38 }
+     ],
+     "alert": {
+       "severity": "HIGH",
+       "title": "HIGH Risk: MOH0273",
+       "description": "Elevated risk detected. Primary indicator: Usb Insertion Count",
+       "risk_score": 78.8
+     }
+   }
+   ```
+5. **Frontend React Subscription (`frontend/src/hooks/useWebSocket.ts` & `Dashboard.tsx`)**:
+   The Global Command Center connects to `ws://localhost:8000/ws` with auto-reconnection and live updates the **Threat Timeline Chart** and **Active Incident Triage Queue** in real-time.
+
+---
+
 ## 🛠️ Technology Stack
 
 | Layer | Technologies | Purpose |
@@ -602,6 +651,11 @@ All protected endpoints require an `Authorization: Bearer <JWT_TOKEN>` header.
 | `GET` | `/api/v1/settings/` | Retrieve backend configuration and runtime telemetry | Yes |
 | `GET` | `/api/v1/reports/summary` | Get aggregated KPI summary for Command Center | Yes |
 | `POST` | `/api/v1/reports/generate` | Generate compliance summary report (PDF/CSV/JSON) | Yes |
+
+### Real-Time WebSocket Streaming (`/ws`)
+| Protocol | Endpoint | Description | Message Types |
+| :--- | :--- | :--- | :--- |
+| `WS / WSS` | `/ws` | Continuous live telemetry & threat prediction stream | `threat_prediction`, `alert`, `system_event` |
 
 ---
 

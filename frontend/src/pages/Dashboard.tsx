@@ -16,8 +16,36 @@ const Dashboard: React.FC = () => {
   // Connect to live WebSocket
   const { isConnected } = useWebSocket(undefined, {
     onMessage: (msg) => {
-      if (typeof msg === "object" && msg !== null && "title" in msg) {
-        setAlerts((prev) => [msg as Alert, ...prev.slice(0, 19)]);
+      if (typeof msg === "object" && msg !== null) {
+        const payload = msg as Record<string, any>;
+        if (payload.type === "threat_prediction") {
+          const newPred: Prediction = {
+            id: Date.now(),
+            employee_id: payload.employee_id,
+            risk_score: payload.risk_score,
+            threat_level: payload.threat_level,
+            confidence: payload.confidence,
+            explanation: { top_features: payload.top_features || [] },
+            model_version: "v2.4.0",
+            created_at: payload.timestamp || new Date().toISOString(),
+          };
+          setPredictions((prev) => [newPred, ...prev.slice(0, 9)]);
+
+          if (payload.alert) {
+            const newAlert: Alert = {
+              id: Date.now(),
+              employee_id: payload.employee_id,
+              severity: (payload.alert.severity || "medium").toLowerCase(),
+              status: "open",
+              title: payload.alert.title,
+              description: payload.alert.description,
+              created_at: payload.timestamp || new Date().toISOString(),
+            };
+            setAlerts((prev) => [newAlert, ...prev.slice(0, 19)]);
+          }
+        } else if ("title" in payload) {
+          setAlerts((prev) => [payload as Alert, ...prev.slice(0, 19)]);
+        }
       }
     },
   });
