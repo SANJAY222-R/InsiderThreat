@@ -2,15 +2,17 @@
 
 # 🛡️ Enterprise Insider Threat Detection System
 
-### Temporal Heterogeneous Graph Neural Networks (THGNN) & Explainable AI (XAI) for Advanced Threat Intelligence in Enterprise Environments
+### Temporal Heterogeneous Graph Neural Networks (THGNN) & Multi-Faceted Explainable AI (XAI) for Advanced Threat Intelligence in Enterprise Environments
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
-[![React 19](https://img.shields.io/badge/frontend-React_19_%7C_TypeScript-61dafb.svg)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
+[![React 19](https://img.shields.io/badge/frontend-React_19_%7C_TypeScript-61dafb.svg)](https://react.dev/)
 [![PyTorch](https://img.shields.io/badge/AI%2FML-PyTorch_%7C_PyG-EE4C2C.svg)](https://pytorch.org/)
-[![NetworkX](https://img.shields.io/badge/Graph-NetworkX_%7C_Cytoscape.js-brightgreen.svg)](https://networkx.org/)
+[![Database: PostgreSQL / SQLite](https://img.shields.io/badge/database-Neon_PostgreSQL_%7C_SQLite-336791.svg)](https://neon.tech/)
+[![Migrations: Alembic](https://img.shields.io/badge/migrations-Alembic-purple.svg)](https://alembic.sqlalchemy.org/)
+[![Graph: Cytoscape.js](https://img.shields.io/badge/graph-NetworkX_%7C_Cytoscape.js-brightgreen.svg)](https://cytoscape.org/)
+[![Tests: 51 Passed](https://img.shields.io/badge/tests-51%2F51_passing-success.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 </div>
 
@@ -21,19 +23,22 @@
 1. [Executive Overview & Key Capabilities](#-executive-overview--key-capabilities)
 2. [Why Graph Neural Networks (GNNs) Over Traditional Approaches](#-why-graph-neural-networks-gnns-over-traditional-approaches)
 3. [System Architecture & Data Pipeline](#-system-architecture--data-pipeline)
-4. [Technology Stack](#-technology-stack)
-5. [Directory Structure & Codebase Map](#-directory-structure--codebase-map)
-6. [Explainable AI (XAI) & Generative LLM Integration](#-explainable-ai-xai--generative-llm-integration)
+   - [End-to-End Processing Stages](#end-to-end-processing-stages)
+   - [Real-Time WebSocket Streaming Hub (`/ws`)](#-real-time-websocket-streaming-hub-ws)
+4. [Explainable AI (XAI) & Generative LLM Integration](#-explainable-ai-xai--generative-llm-integration)
+5. [Technology Stack](#-technology-stack)
+6. [Directory Structure & Codebase Map](#-directory-structure--codebase-map)
 7. [Prerequisites & Environment Configuration](#-prerequisites--environment-configuration)
 8. [Step-by-Step Execution Guide](#-step-by-step-execution-guide)
-   - [Backend API Server](#step-1-start-the-backend-api-server)
-   - [Frontend Dashboard](#step-2-start-the-frontend-react-dashboard)
-   - [Docker Deployment](#option-d-docker--docker-compose-deployment)
-   - [Default Accounts & Credentials](#step-3-default-user-accounts--rbac-credentials)
-9. [Data Ingestion, Simulation & Testing Methods](#-data-ingestion-simulation--testing-methods)
+   - [Step 1: Start the FastAPI Backend Server](#step-1-start-the-fastapi-backend-server)
+   - [Step 2: Start the React Frontend Dashboard](#step-2-start-the-react-frontend-dashboard)
+   - [Step 3: Database Configuration (SQLite & Neon PostgreSQL)](#step-3-database-configuration-sqlite--neon-postgresql)
+   - [Step 4: Default User Accounts & RBAC Credentials](#step-4-default-user-accounts--rbac-credentials)
+   - [Step 5: Docker & Docker Compose Deployment](#step-5-docker--docker-compose-deployment)
+9. [Data Ingestion, Simulation & Attack Scenario Injections](#-data-ingestion-simulation--attack-scenario-injections)
    - [Method A: Built-in CERT r4.2 Benchmark Entities](#method-a-inspect-pre-indexed-cert-r42-benchmark-entities)
-   - [Method B: Automated CLI Scenario Simulator](#method-b-automated-cli-scenario-simulator-simulate_datapy)
-   - [Method C: Interactive Event Injection in Web UI](#method-c-interactive-event-injection-in-web-ui)
+   - [Method B: Automated CLI Scenario Simulator (`simulate_data.py`)](#method-b-automated-cli-scenario-simulator-simulate_datapy)
+   - [Method C: Interactive Event Injection via Web UI](#method-c-interactive-event-injection-via-web-ui)
    - [Method D: Programmatic REST API Event Injection](#method-d-programmatic-rest-api-event-injection)
 10. [Frontend Pages & SOC Capabilities](#-frontend-pages--soc-capabilities)
 11. [REST API Reference & Endpoints](#-rest-api-reference--endpoints)
@@ -47,9 +52,9 @@
 
 ## 🌟 Executive Overview & Key Capabilities
 
-The **Enterprise Insider Threat Detection System** is an enterprise-grade cyber intelligence platform designed to detect, investigate, and explain malicious or anomalous insider behaviors across corporate enterprise environments. 
+The **Enterprise Insider Threat Detection System** is an enterprise-grade cyber intelligence platform engineered to identify, investigate, and explain anomalous and malicious insider activities across corporate enterprise infrastructures.
 
-Moving away from brittle, high-noise rule engines and isolated tabular machine learning, this platform utilizes a **Temporal Heterogeneous Graph Neural Network (THGNN)** combined with a multi-layered **Explainable AI (XAI)** framework to analyze multi-modal enterprise telemetry across authentication logs, USB removable media events, file system access, email communications, and directory structures.
+Unlike brittle threshold-based rule engines and disconnected tabular machine learning baselines, this platform leverages a **Temporal Heterogeneous Graph Neural Network (THGNN)** combined with a multi-layered **Explainable AI (XAI)** framework. It analyzes heterogeneous telemetry across authentication logs, USB removable media events, file system access, email communications, and corporate directory structures.
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────┐
@@ -58,13 +63,13 @@ Moving away from brittle, high-noise rule engines and isolated tabular machine l
 │   - Global Command Center  - Behavioral Investigations   - Graph Topology Viewer  │
 │   - Incident Alert Triage  - Explainability (XAI)        - User Administration    │
 └─────────────────────────────────────────┬─────────────────────────────────────────┘
-                                          │ REST API / WebSockets
+                                          │ REST API (HTTP) / WebSockets (/ws)
                                           v
 ┌───────────────────────────────────────────────────────────────────────────────────┐
 │                                FASTAPI BACKEND                                    │
 │   - OAuth2 / JWT Auth (HS256)   - Sliding-Window Rate Limiter  - Request Timing   │
 │   - WebSocket Streaming Hub     - Global Error Hierarchy       - Loguru Logging   │
-│   - SQLAlchemy 2.0 ORM Engine   - SQLite / PostgreSQL DB       - v1 REST Routers  │
+│   - SQLAlchemy 2.0 ORM Engine   - PostgreSQL (Neon) / SQLite   - v1 REST Routers  │
 │   - Heterogeneous Graph Index   - NetworkX In-Memory Traversal - CERT r4.2 Loader │
 └─────────────────────────────────────────┬─────────────────────────────────────────┘
                                           │
@@ -79,19 +84,20 @@ Moving away from brittle, high-noise rule engines and isolated tabular machine l
 ```
 
 ### Key Capabilities
-- 🔍 **Real-Time Threat Detection**: Continuous monitoring of user behaviors with instantaneous risk scoring ($0.0 - 100.0$).
-- 🧠 **Temporal Heterogeneous Graph Neural Networks (THGNN)**: Captures complex structural and time-dependent relationships across diverse entity types (Users, Hosts, Files, USBs, Emails).
-- 📊 **Multi-Faceted Explainable AI (XAI)**: Provides SHAP feature attributions, multi-head attention weights, GNNExplainer subgraphs, and counterfactual "what-if" analysis.
-- 🤖 **Generative LLM Synthesis**: Converts raw quantitative GNN telemetry into actionable, human-readable SOC analyst summaries and incident response playbooks via Gemini API.
-- 🌐 **Interactive Graph Topology Explorer**: Deep-dive k-hop neighborhood graph visualization powered by Cytoscape.js with multiple layout engines (CoSE, concentric, hierarchical).
-- ⚡ **Real-Time Alert Broadcasting**: Instantaneous alert streaming to connected security analysts via FastAPI WebSockets (`/ws`).
-- 🛡️ **Role-Based Access Control (RBAC)**: Secure access control tailored for Analysts, Administrators, and Compliance Auditors.
+- 🔍 **Real-Time Threat Detection**: Continuous monitoring of user behavioral patterns with instantaneous, calibrated risk scoring ($0.0 - 100.0$).
+- 🧠 **Temporal Heterogeneous Graph Attention Networks (THGNN)**: Models multi-hop structural and time-dependent relationships across diverse entity types (Users, Hosts, Files, USB Devices, Email Addresses).
+- 📊 **Multi-Faceted Explainable AI (XAI)**: Provides SHAP feature attributions, multi-head attention coefficients, GNNExplainer subgraphs, and counterfactual "what-if" risk reduction projections.
+- 🤖 **Generative LLM Threat Synthesis**: Translates quantitative GNN embeddings and telemetry into plain-language SOC analyst summaries and incident response playbooks via Google Gemini API.
+- 🌐 **Interactive Topological Graph Explorer**: Deep-dive k-hop neighborhood graph visualization powered by Cytoscape.js with multiple layout engines (CoSE, concentric, hierarchical).
+- ⚡ **Real-Time Alert Streaming**: Instantaneous alert broadcasting to connected analysts via FastAPI WebSockets (`/ws`).
+- 🛡️ **Role-Based Access Control (RBAC)**: Fine-grained access control with distinct permission scopes for Analysts, Administrators, and Compliance Auditors.
+- 🗄️ **Dual Database Architecture**: Development on local SQLite and production deployment on Neon Serverless PostgreSQL with modern `psycopg3`, `JSONB`, and Alembic migrations.
 
 ---
 
 ## 🔬 Why Graph Neural Networks (GNNs) Over Traditional Approaches
 
-Traditional security tools evaluate log lines in isolation or aggregate behaviors into flat tabular matrices, stripping away relational context.
+Traditional security information systems (SIEMs) evaluate log entries in isolation or aggregate behaviors into flat 2D tabular matrices, stripping away essential topological relationships.
 
 ### Comparison Matrix
 
@@ -101,19 +107,19 @@ Traditional security tools evaluate log lines in isolation or aggregate behavior
 | **Contextual Awareness** | Zero topological context; triggers on isolated events | Evaluates single-entity counters; blind to multi-entity context | **Multi-Hop Graph Context** (tracks user $\to$ workstation $\to$ sensitive file $\to$ USB) |
 | **False Positive Rate (FPR)** | **High (> 20%)**; causes severe analyst fatigue | **Moderate (10% - 15%)** on benign behavioral spikes | **Ultra-Low (< 2.5%)**; cross-verifies topological and temporal patterns |
 | **Lateral Movement Detection** | Requires hundreds of manually maintained correlation rules | Cannot detect; tabular models cannot trace graph traversals | **Native**; multi-layer message passing naturally traces multi-hop movement |
-| **Temporal Granularity** | Hardcoded windows (e.g., "if $> 5$ events within 10 min") | Coarse histograms (e.g., daily aggregates lose event ordering) | **Continuous Sinusoidal Time Encodings** capturing microsecond sequence dynamics |
+| **Temporal Granularity** | Hardcoded windows (e.g., "if $> 5$ events within 10 min") | Coarse histograms (e.g., daily aggregates lose event ordering) | **Continuous Sinusoidal Time Encodings** capturing continuous sequence dynamics |
 | **Explainability** | Only shows the static rule name that triggered | Generic feature importance (e.g., single global bar chart) | **Multi-Dimensional XAI**: Attention subgraphs + SHAP + Counterfactuals + LLM reports |
 | **Evasion Resilience** | Low; easily bypassed by operating just below thresholds | Low; slow-and-low attacks blend into tabular baseline | **High**; detects structural graph anomalies even when event volume is small |
 
 ### Core Architectural Principles of THGNN
 
-1. **Enterprise Telemetry is Inherently Graph-Structured**: User actions are not isolated events; they form a connected web of interactions (e.g., User logs into Host, Host mounts Network Share, Share reads File, File copied to USB). Flattening this into a flat 2D row destroys over 80% of the relational intelligence.
-2. **Multi-Hop Message Passing Captures Staged Exfiltration**: Malicious insiders distribute actions across machines, accounts, and time. An $L$-layer GNN performs message passing across $L$ hops:
+1. **Enterprise Telemetry is Inherently Graph-Structured**: User operations are not isolated; they form a connected web of interactions (e.g., User logs into Host, Host mounts Network Share, Share reads File, File copied to USB). Flattening this into flat tabular rows discards over 80% of relational intelligence.
+2. **Multi-Hop Message Passing Captures Staged Exfiltration**: Staged attacks distribute operations across machines, accounts, and time. An $L$-layer GNN performs message passing across $L$ hops:
    $$\mathbf{h}_{v}^{(l+1)} = \sigma \left( \sum_{r \in \mathcal{R}} \sum_{u \in \mathcal{N}_v^r} \alpha_{uv} \mathbf{W}_r \mathbf{h}_u^{(l)} \right)$$
-   This allows a user node embedding to integrate contextual signals from nodes 2, 3, and 4 hops away, discovering coordinated malicious attack chains that tabular models miss entirely.
-3. **Heterogeneous Semantics**: Uses dedicated projection matrices ($\mathbf{W}_r$) for distinct relationship types (`LOGGED_INTO`, `CONNECTED_USB`, `ACCESSED_FILE`, `SENT_EMAIL_TO`, `REPORTS_TO`), preserving entity-specific properties.
-4. **Attention as a Built-In Diagnostic Tool**: Graph Attention (GAT) computes dynamic coefficients ($\alpha_{ij}$) during inference. The highest-attention edges directly highlight the attack pathway.
-5. **Robustness Against "Slow-and-Low" Attacks**: An insider downloading one unauthorized file every few days evades volume threshold counters, but a GNN detects that the target node belongs to an unauthorized topological cluster.
+   This enables user node embeddings to incorporate signals from entities 2, 3, and 4 hops away, discovering coordinated attack chains that tabular models miss.
+3. **Heterogeneous Semantics**: Dedicated projection matrices ($\mathbf{W}_r$) for distinct relationship types (`LOGGED_INTO`, `CONNECTED_USB`, `ACCESSED_FILE`, `SENT_EMAIL_TO`, `REPORTS_TO`) preserve entity-specific semantics.
+4. **Attention as a Diagnostic Tool**: Graph Attention (GAT) computes dynamic coefficients ($\alpha_{ij}$) during inference, highlighting causal attack pathways.
+5. **Resilience to "Slow-and-Low" Attacks**: An insider downloading one unauthorized file per week evades volume counters, but THGNN detects that the target node belongs to an unauthorized topological cluster.
 
 ---
 
@@ -122,11 +128,11 @@ Traditional security tools evaluate log lines in isolation or aggregate behavior
 ```mermaid
 flowchart TD
     subgraph S1["Stage 1: Multi-Modal Telemetry Ingestion"]
-        L1["Logon / Logoff Logs (logon.csv)"]
-        L2["Removable Media Events (device.csv)"]
-        L3["File Operations (file.csv)"]
-        L4["Email Communications (email.csv)"]
-        L5["LDAP Organization Hierarchy"]
+        L1["Logon / Logoff Logs (clean_logon.csv)"]
+        L2["Removable Media Events (clean_device.csv)"]
+        L3["File Operations (clean_file.csv)"]
+        L4["Email Communications (clean_email.csv)"]
+        L5["LDAP Organizational Hierarchy"]
     end
 
     subgraph S2["Stage 2: Feature Profiling & Anomaly Extraction"]
@@ -136,7 +142,7 @@ flowchart TD
     end
 
     subgraph S3["Stage 3: Heterogeneous Graph Construction"]
-        G1["Heterogeneous Graph (NetworkX & PyG)"]
+        G1["Heterogeneous Graph (NetworkX & PyG HeteroData)"]
         G2["Nodes: User, Host, File, USBDevice, EmailAddress"]
         G3["Edges: LOGON, CONNECTED_USB, ACCESSED, SENT"]
     end
@@ -146,7 +152,7 @@ flowchart TD
         M2["Continuous Harmonic Sinusoidal Time Encodings"]
         M3["Temporal Hetero GAT Layers (Multi-Head Attention)"]
         M4["Contextual Transformer Refinement"]
-        M5["Prediction Head (0 - 100 Calibrated Risk Score)"]
+        M5["Prediction Head (0.0 - 100.0 Calibrated Risk Score)"]
     end
 
     subgraph S5["Stage 5: Alerting, XAI & Incident Response"]
@@ -159,9 +165,9 @@ flowchart TD
     S1 --> S2 --> S3 --> S4 --> S5
 ```
 
-### End-to-End Workflow Stages
+### End-to-End Processing Stages
 
-- **Stage 1 (Ingestion)**: Ingests raw events from the CERT r4.2 benchmark dataset (over 20,529 nodes and 72,620 interaction edges) or real-time event feeds.
+- **Stage 1 (Ingestion)**: Ingests normalized logs from the CERT r4.2 benchmark dataset (**20,529 nodes** and **72,620 interaction edges**) or real-time event feeds.
 - **Stage 2 (Feature Engineering)**: Computes temporal features (`is_after_hours`, `sin_hour`, `cos_hour`), behavioral rates (download MB, USB insertions, failed auth ratio), and statistical Z-scores against user and peer baselines.
 - **Stage 3 (Graph Construction)**: Converts entities and actions into a dynamic heterogeneous graph with typed nodes and directed timestamped edges.
 - **Stage 4 (THGNN Neural Inference)**: Encoders project heterogeneous features into a unified 128-dimensional latent space. Multi-head temporal GAT layers propagate relational context, outputting calibrated threat metrics:
@@ -173,7 +179,7 @@ flowchart TD
 
 ---
 
-### ⚡ Real-Time Data Streaming & WebSocket Engine (`/ws`)
+### ⚡ Real-Time WebSocket Streaming Hub (`/ws`)
 
 The application features a built-in, continuous live data simulation pipeline that runs concurrently with the REST API:
 
@@ -193,7 +199,7 @@ The application features a built-in, continuous live data simulation pipeline th
 1. **Lifespan Background Broadcaster (`backend/app/main.py`)**:
    On backend startup, FastAPI spawns a non-blocking asynchronous task (`stream_threat_events`) via the application lifespan manager that executes every `4.0` seconds.
 2. **CERT Event Pool Ingestion (`backend/app/websocket/data_feed.py`)**:
-   Loads preprocessed telemetry from `dataset/processed/clean_*.csv`, extracting multi-modal behavioral contexts (after-hours ratios, failed logins, USB insertions, file bytes, and outbound data exfiltration indicators) across 200+ employee entities.
+   Loads preprocessed telemetry from `dataset/processed/clean_*.csv`, extracting multi-modal behavioral contexts across 200+ employee entities.
 3. **In-Flight THGNN Inference & Auto-Alerting**:
    Every broadcast cycle evaluates the next employee context with the `Predictor` engine. If the computed risk score falls in `HIGH` or `CRITICAL` bands, a structured alert with primary causal indicators is synthesized.
 4. **WebSocket Payload Schema**:
@@ -219,103 +225,6 @@ The application features a built-in, continuous live data simulation pipeline th
    ```
 5. **Frontend React Subscription (`frontend/src/hooks/useWebSocket.ts` & `Dashboard.tsx`)**:
    The Global Command Center connects to `ws://localhost:8000/ws` with auto-reconnection and live updates the **Threat Timeline Chart** and **Active Incident Triage Queue** in real-time.
-
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technologies | Purpose |
-| :--- | :--- | :--- |
-| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS, Lucide Icons | Responsive SOC Analyst Command Center UI |
-| **Graph Visualization** | Cytoscape.js, CoSE / Concentric / Hierarchical layouts | Interactive multi-hop entity relationship exploration |
-| **Data Visualization** | Recharts, Plotly | Risk velocity trends, feature attributions, anomaly metrics |
-| **Backend API** | FastAPI, Pydantic v2, Pydantic-Settings, Loguru | Asynchronous REST API, validation, error handling |
-| **Database & ORM** | SQLite / PostgreSQL, SQLAlchemy 2.0 | Transaction management, audit logging, entity storage |
-| **Authentication** | OAuth2, JWT (HS256), Passlib (Bcrypt) | Role-Based Access Control (Analyst, Admin, Auditor) |
-| **Real-Time Comms** | WebSockets (`/ws`) | Live alert and prediction streaming to frontend clients |
-| **AI / Deep Learning** | PyTorch, PyTorch Geometric (PyG), scikit-learn | THGNN model, temporal graph attention, embeddings |
-| **Graph Processing** | NetworkX, Neo4j (optional connector) | In-memory graph traversal, k-hop subgraph extraction |
-| **Explainable AI (XAI)** | SHAP, GNNExplainer, Custom Counterfactual Engine | Feature attributions, what-if projections, edge weights |
-| **Generative AI / LLM** | Google Gemini API (`gemini-2.5-flash` / `gemini-pro`) | Automated natural language threat summaries & playbooks |
-| **Testing & Tooling** | PyTest, HTTPX (TestClient), Black, Flake8 | Automated unit, integration, and E2E verification |
-| **Deployment** | Docker, Docker Compose, Nginx | Multi-container production deployment |
-
----
-
-## 📁 Directory Structure & Codebase Map
-
-```text
-InsiderThreat/
-├── backend/                      # FastAPI Backend Service
-│   ├── app/
-│   │   ├── api/v1/endpoints/     # REST Endpoints (auth, users, alerts, predictions, graphs, xai, reports)
-│   │   ├── auth/                 # OAuth2 & JWT authentication handlers
-│   │   ├── core/                 # Pydantic Settings, Loguru configuration, custom exceptions
-│   │   ├── database/             # SQLAlchemy engine, declarative Base, database seeder
-│   │   ├── middleware/           # CORS, Sliding-window rate limiter, request timing
-│   │   ├── models/               # SQLAlchemy ORM Models (User, Prediction, Alert, AuditLog)
-│   │   ├── schemas/              # Pydantic validation schemas (requests & responses)
-│   │   ├── services/             # Core business logic (GraphService, AlertService, PredictionService, etc.)
-│   │   ├── websocket/            # Real-time WebSocket connection manager
-│   │   └── main.py               # FastAPI application entrypoint
-│   └── requirements.txt          # Backend Python dependencies
-│
-├── frontend/                     # React + TypeScript Frontend Service
-│   ├── src/
-│   │   ├── components/           # Reusable UI components (Modals, Tables, Cards, Badges)
-│   │   ├── layouts/              # Main dashboard sidebar & layout wrapper
-│   │   ├── pages/                # Dashboard, Alerts, GraphViewer, Explainability, Investigations, Users, Reports, Settings, Login
-│   │   ├── services/             # API client & endpoint services (graphService, alertService, etc.)
-│   │   ├── types/                # TypeScript interfaces & definitions
-│   │   ├── App.tsx               # Route declarations & navigation setup
-│   │   └── main.tsx              # React DOM mounting
-│   ├── package.json              # Node dependencies & Vite build scripts
-│   └── vite.config.ts            # Vite build configuration & Tailwind plugin
-│
-├── ai/                           # AI, Deep Learning & Graph Intelligence
-│   ├── data/                     # Feature engineering & dataset loaders
-│   ├── encoders/                 # Node, Edge, and Continuous Sinusoidal Time feature encoders
-│   ├── evaluation/               # Model evaluation metrics & baseline benchmarks
-│   ├── explainability/           # SHAP attributions, GNNExplainer, AttentionExplainer
-│   ├── inference/                # Real-time single & batch prediction engines
-│   ├── layers/                   # GAT, Message Passing, Pooling, Temporal layers
-│   ├── models/                   # THGNN neural architectures & base models
-│   └── training/                 # Training loops, loss functions, callbacks & metrics
-│
-├── xai/                          # Explainable AI & LLM Narrative Generation
-│   ├── counterfactual/           # What-if perturbation & risk reduction analyzer
-│   ├── reasoning/                # Natural language synthesis (Gemini LLM engine) & risk reasoning
-│   └── xai_engine.py             # Unified XAI orchestrator
-│
-├── dataset/                      # CERT r4.2 Processed & Raw Dataset
-│   ├── processed/                # Preprocessed clean CSVs (clean_logon.csv, clean_device.csv, etc.)
-│   ├── raw/                      # Raw log files
-│   └── graphs/                   # Serialized NetworkX & PyG graph snapshots
-│
-├── r4.2/                         # Original CERT Benchmark Records
-├── scripts/                      # Utility, verification & simulation scripts
-│   ├── simulate_data_flow.py     # CERT dataset behavioral flow simulator
-│   ├── test_xai_engine.py        # Complete XAI engine test suite (SHAP, GNN, Attention)
-│   ├── test_detection_engine.py  # Detection engine verification
-│   └── setup_env.py              # Environment setup helper
-│
-├── configs/                      # YAML configuration files (security, logging, models, xai)
-├── deployment/                   # Dockerfiles, docker-compose, Nginx configs
-├── docs/                         # Extended architecture, dataset, and API documentation
-├── tests/                        # PyTest unit and integration test suite (48 tests)
-├── simulate_data.py              # CLI test data & attack scenario injector utility
-└── Makefile                      # Developer shortcut commands
-```
-
-### Key Subsystems & Source Files
-
-| Subsystem | Key Files | Responsibility |
-| :--- | :--- | :--- |
-| **FastAPI Backend** | `backend/app/main.py`<br>`backend/app/services/graph_service.py`<br>`backend/app/api/v1/endpoints/explainability.py` | REST API routing, OAuth2/JWT auth, WebSocket hub, NetworkX graph indexing, alert lifecycle management. |
-| **Frontend UI** | `frontend/src/pages/Dashboard.tsx`<br>`frontend/src/pages/GraphViewer.tsx`<br>`frontend/src/pages/Explainability.tsx` | React 19 command center, Cytoscape.js topological visualization, Recharts attribution analytics. |
-| **AI & Neural Models** | `ai/models/thgnn.py`<br>`ai/layers/graph_attention.py`<br>`ai/encoders/temporal_encoder.py` | Heterogeneous GNN model, multi-head temporal graph attention, sinusoidal time encoding, risk scorer. |
-| **Explainable AI (XAI)** | `xai/xai_engine.py`<br>`xai/reasoning/nl_explainer.py`<br>`ai/explainability/feature_importance.py` | SHAP feature attributions, counterfactual what-if analysis, GNNExplainer subgraphs, Gemini LLM summaries. |
-| **Data & Telemetry** | `ai/data/feature_engineer.py`<br>`simulate_data.py`<br>`r4.2/` | CERT r4.2 dataset parsing, behavioral feature extraction, CLI attack scenario simulator. |
 
 ---
 
@@ -359,8 +268,109 @@ nl_generation:
    - `ai/explainability/attention_explainer.py`: Identifies critical edges using multi-head attention coefficients ($\alpha_{ij}$).
    - `xai/counterfactual/counterfactual_analyzer.py`: Projects risk reductions if specific permissions are revoked.
    - `xai/reasoning/risk_reasoning.py`: Compiles all telemetry into a structured JSON payload.
-2. **LLM Generation (`xai/reasoning/nl_explainer.py`)**: Submits the structured prompt to the Gemini API (`gemini-2.5-flash`). If no API key is provided, the engine gracefully falls back to deterministic template-based generation.
+2. **LLM Generation (`xai/reasoning/nl_explainer.py`)**: Submits the structured prompt to the Gemini API (`gemini-2.5-flash`). If no API key is configured, the engine gracefully falls back to deterministic template-based generation.
 3. **SOC Delivery**: Streamed via `/api/v1/explain/{prediction_id}` to the frontend **AI Explainability (`/xai`)** page and downloadable PDF reports.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React 19, TypeScript 5.7+, Vite 6, Tailwind CSS 4, Lucide Icons | Responsive SOC Analyst Command Center UI |
+| **Graph Visualization** | Cytoscape.js, CoSE / Concentric / Hierarchical layouts | Interactive multi-hop entity relationship exploration |
+| **Data Visualization** | Recharts, Plotly | Risk velocity trends, feature attributions, anomaly metrics |
+| **Backend API** | FastAPI, Pydantic v2, Pydantic-Settings, Loguru | Asynchronous REST API, validation, error handling |
+| **Database & ORM** | PostgreSQL 18 (Neon Serverless) / SQLite, SQLAlchemy 2.0, `psycopg3` | Transaction management, audit logging, entity storage |
+| **Schema Migrations** | Alembic | Database schema versioning and automated migrations |
+| **Authentication** | OAuth2, JWT (HS256), Passlib (Bcrypt) | Role-Based Access Control (Analyst, Admin, Auditor) |
+| **Real-Time Comms** | WebSockets (`/ws`) | Live alert and prediction streaming to frontend clients |
+| **AI / Deep Learning** | PyTorch 2.5+, PyTorch Geometric (PyG), scikit-learn | THGNN model, temporal graph attention, embeddings |
+| **Graph Processing** | NetworkX, Neo4j (optional connector) | In-memory graph traversal, k-hop subgraph extraction |
+| **Explainable AI (XAI)** | SHAP, GNNExplainer, Custom Counterfactual Engine | Feature attributions, what-if projections, edge weights |
+| **Generative AI / LLM** | Google Gemini API (`gemini-2.5-flash` / `gemini-pro`) | Automated natural language threat summaries & playbooks |
+| **Testing & Quality** | PyTest (51 tests), HTTPX (TestClient), Black, Flake8 | Automated unit, integration, and E2E verification |
+| **Deployment** | Docker, Docker Compose, Nginx | Multi-container production deployment |
+
+---
+
+## 📁 Directory Structure & Codebase Map
+
+```text
+InsiderThreat/
+├── backend/                      # FastAPI Backend Service
+│   ├── app/
+│   │   ├── api/v1/endpoints/     # REST Endpoints (auth, users, alerts, predictions, graphs, explainability, reports, settings)
+│   │   ├── auth/                 # OAuth2 & JWT authentication dependencies & handlers
+│   │   ├── core/                 # Pydantic Settings, Loguru configuration, custom exceptions
+│   │   ├── database/             # SQLAlchemy 2.0 engine, declarative Base, database seeder
+│   │   ├── middleware/           # CORS, Sliding-window rate limiter, request timing, error handler
+│   │   ├── models/               # SQLAlchemy ORM Models (User, Prediction, Alert, AuditLog)
+│   │   ├── repositories/         # Data access repositories (user, alert, prediction, audit)
+│   │   ├── schemas/              # Pydantic validation schemas (requests & responses)
+│   │   ├── services/             # Domain services (GraphService, AlertService, PredictionService, ExplainabilityService)
+│   │   ├── websocket/            # WebSocket ConnectionManager & real-time CERT data feed
+│   │   └── main.py               # FastAPI application entrypoint & lifespan manager
+│   ├── pyproject.toml            # Backend packaging configuration
+│   └── requirements.txt          # Backend Python dependencies
+│
+├── frontend/                     # React 19 + TypeScript Frontend Service
+│   ├── src/
+│   │   ├── components/           # Reusable UI components (Modals, Tables, Cards, Badges)
+│   │   ├── hooks/                # Custom React hooks (useWebSocket, useAuth, useTheme)
+│   │   ├── layouts/              # Main dashboard sidebar & layout wrapper
+│   │   ├── pages/                # Dashboard, Alerts, GraphViewer, Explainability, Investigations, Users, Reports, Settings, Login
+│   │   ├── services/             # API client & endpoint services (graphService, alertService, etc.)
+│   │   ├── types/                # TypeScript interfaces & definitions
+│   │   ├── App.tsx               # Route declarations & navigation setup
+│   │   └── main.tsx              # React DOM mounting
+│   ├── package.json              # Node dependencies & build scripts
+│   └── vite.config.ts            # Vite build configuration & Tailwind plugin
+│
+├── ai/                           # AI, Deep Learning & Graph Intelligence
+│   ├── data/                     # Feature engineering & dataset loaders
+│   ├── embeddings/               # Graph embedding exporters
+│   ├── encoders/                 # Node, Edge, and Continuous Sinusoidal Time feature encoders
+│   ├── evaluation/               # Model evaluation metrics & baseline benchmarks
+│   ├── explainability/           # SHAP attributions, GNNExplainer, AttentionExplainer
+│   ├── inference/                # Real-time single & batch prediction engines
+│   ├── layers/                   # GAT, Message Passing, Pooling, Temporal layers
+│   ├── models/                   # THGNN neural architectures & base models
+│   └── training/                 # Training loops, loss functions, callbacks & metrics
+│
+├── xai/                          # Explainable AI & LLM Narrative Generation
+│   ├── counterfactual/           # What-if perturbation & risk reduction analyzer
+│   ├── reasoning/                # Natural language synthesis (Gemini LLM engine) & risk reasoning
+│   └── xai_engine.py             # Unified XAI orchestrator
+│
+├── alembic/                      # Alembic Database Migrations
+│   ├── versions/                 # Versioned migration scripts (0001_initial_schema.py)
+│   └── env.py                    # Alembic migration environment configuration
+├── alembic.ini                   # Alembic configuration
+│
+├── dataset/                      # CERT r4.2 Processed & Raw Dataset
+│   ├── processed/                # Preprocessed clean CSVs (clean_logon.csv, clean_device.csv, etc.)
+│   ├── raw/                      # Raw log files
+│   └── graphs/                   # Serialized NetworkX & PyG graph snapshots
+│
+├── r4.2/                         # Original CERT Benchmark Records
+├── scripts/                      # Utility, verification & simulation scripts
+│   ├── entity_extraction/        # Phase 4 Entity Extraction pipeline & modules
+│   ├── feature_engineering/      # Phase 3 Feature Engineering pipeline & modules
+│   ├── graph_builder/            # Phase 5 Graph Construction pipeline & modules
+│   ├── simulate_data_flow.py     # CERT dataset behavioral flow simulator
+│   ├── test_xai_engine.py        # Complete XAI engine test suite (SHAP, GNN, Attention)
+│   ├── test_fastapi.py           # Backend route validation suite
+│   ├── test_detection_engine.py  # Detection engine verification
+│   └── setup_env.py              # Environment setup helper
+│
+├── configs/                      # YAML configuration files (security, logging, models, xai, database)
+├── deployment/                   # Dockerfiles, docker-compose, Nginx configs
+├── docs/                         # Extended architecture, dataset, and API documentation
+├── tests/                        # PyTest unit and integration test suite (51 tests)
+├── simulate_data.py              # CLI test data & attack scenario injector utility
+└── Makefile                      # Developer shortcut commands
+```
 
 ---
 
@@ -368,9 +378,9 @@ nl_generation:
 
 ### System Requirements
 
-| Requirement | WSL2 (Ubuntu / Debian) | Native Windows 11 (PowerShell / CMD) | macOS / Linux Native |
+| Requirement | Linux / WSL2 (Ubuntu / Debian) | Native Windows 11 (PowerShell / CMD) | macOS |
 | :--- | :--- | :--- | :--- |
-| **Python** | Python 3.10+ (Recommended: 3.12) | Python 3.10+ (Add to PATH enabled) | Python 3.10+ |
+| **Python** | Python 3.10+ (Recommended: 3.12) | Python 3.10+ (Added to PATH) | Python 3.10+ |
 | **Node.js** | Node.js 18.x - 24.x (`node -v`) | Node.js 18.x - 24.x (`node -v`) | Node.js 18.x - 24.x |
 | **Package Managers** | `pip` and `npm` | `pip` and `npm` | `pip` and `npm` |
 | **Working Directory** | `/mnt/c/Users/HP/Desktop/InsiderThreat` | `C:\Users\HP\Desktop\InsiderThreat` | `~/InsiderThreat` |
@@ -379,11 +389,11 @@ nl_generation:
 
 ## 🚀 Step-by-Step Execution Guide
 
-### Step 1: Start the Backend API Server
+### Step 1: Start the FastAPI Backend Server
 
 Open a terminal in the project root directory:
 
-#### Option A: Running on Linux / WSL2 (Bash)
+#### On Linux / WSL2 (Bash):
 ```bash
 cd /mnt/c/Users/HP/Desktop/InsiderThreat
 
@@ -394,7 +404,7 @@ pip install -r backend/requirements.txt
 PYTHONPATH=. uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### Option B: Running on Native Windows 11 (PowerShell)
+#### On Native Windows 11 (PowerShell):
 ```powershell
 cd C:\Users\HP\Desktop\InsiderThreat
 
@@ -406,7 +416,7 @@ $env:PYTHONPATH="."
 uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-#### Option C: Running on Native Windows 11 (Command Prompt / CMD)
+#### On Native Windows 11 (Command Prompt / CMD):
 ```cmd
 cd C:\Users\HP\Desktop\InsiderThreat
 
@@ -425,7 +435,7 @@ uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
 
 ---
 
-### Step 2: Start the Frontend React Dashboard
+### Step 2: Start the React Frontend Dashboard
 
 Open a **second terminal window**:
 
@@ -448,27 +458,11 @@ npm run dev
 
 ---
 
-### Option D: Docker & Docker Compose Deployment
-
-To spin up the entire multi-container architecture (Frontend, Backend, Nginx, Neo4j):
-
-```bash
-docker-compose -f deployment/docker-compose.yml up -d --build
-```
-
-| Service | Access URL |
-| :--- | :--- |
-| **Frontend Portal** | `http://localhost` |
-| **Backend REST API** | `http://localhost:8000/api/docs` |
-| **Neo4j Browser** | `http://localhost:7474` |
-
----
-
 ### Step 3: Database Configuration (SQLite & Neon PostgreSQL)
 
 The system supports local development on SQLite and production deployment on **Neon Serverless PostgreSQL (PostgreSQL 18.6)** using **SQLAlchemy 2.0** with the modern `psycopg` (psycopg 3) driver, native `JSONB` with GIN indexing, and connection pre-ping / auto-recycling.
 
-#### Connecting to Neon PostgreSQL (0.5 GB Free Tier)
+#### Connecting to Neon PostgreSQL
 Add your Neon pooled connection string to your `.env` file:
 
 ```env
@@ -489,6 +483,8 @@ alembic downgrade base
 PYTHONPATH=. python3 backend/app/database/seed.py
 ```
 
+---
+
 ### Step 4: Default User Accounts & RBAC Credentials
 
 The system automatically initializes and seeds default users on first startup:
@@ -501,7 +497,23 @@ The system automatically initializes and seeds default users on first startup:
 
 ---
 
-## 📊 Data Ingestion, Simulation & Testing Methods
+### Step 5: Docker & Docker Compose Deployment
+
+To spin up the entire multi-container architecture (Frontend, Backend, Nginx, Neo4j):
+
+```bash
+docker-compose -f deployment/docker-compose.yml up -d --build
+```
+
+| Service | Access URL |
+| :--- | :--- |
+| **Frontend Portal** | `http://localhost` |
+| **Backend REST API** | `http://localhost:8000/docs` |
+| **Neo4j Browser** | `http://localhost:7474` |
+
+---
+
+## 📊 Data Ingestion, Simulation & Attack Scenario Injections
 
 The system provides **4 flexible ways** to feed data, simulate attack scenarios, and test threat detection capabilities:
 
@@ -517,7 +529,7 @@ The backend pre-indexes the full CERT r4.2 security dataset (**20,529 nodes** an
 ---
 
 ### Method B: Automated CLI Scenario Simulator (`simulate_data.py`)
-While the backend is running, open a third terminal in the project root to inject synthetic attack vectors:
+While the backend is running, open a terminal in the project root to inject synthetic attack vectors:
 
 #### On Linux / WSL2:
 ```bash
@@ -544,7 +556,7 @@ python simulate_data.py --scenario custom --user CUSTOM_EMP_01 --events 10
 
 ---
 
-### Method C: Interactive Event Injection in Web UI
+### Method C: Interactive Event Injection via Web UI
 1. Navigate to **Enterprise Graph Explorer** (`http://localhost:5173/graph`).
 2. Click the **`+ Inject Test Event`** button in the top-right toolbar.
 3. Choose or input:
@@ -629,13 +641,14 @@ All protected endpoints require an `Authorization: Bearer <JWT_TOKEN>` header.
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/auth/register` | Register a new user account | No |
-| `POST` | `/api/v1/auth/login` | Authenticate with username & password (OAuth2 Form) | No |
+| `POST` | `/api/v1/auth/login` | Authenticate with username & password (OAuth2 Form / JSON) | No |
 | `GET` | `/api/v1/auth/me` | Fetch profile of currently authenticated user | Yes |
 
 ### Threat Predictions (`/api/v1/predictions`)
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/v1/predictions/` | Trigger real-time THGNN inference for an employee ID | Yes |
+| `POST` | `/api/v1/predictions/predict` | Alternate endpoint for real-time inference | Yes |
 | `GET` | `/api/v1/predictions/` | List historical predictions (filterable by employee ID) | Yes |
 | `GET` | `/api/v1/predictions/{id}` | Retrieve single prediction details and stored explanation | Yes |
 
@@ -674,6 +687,7 @@ All protected endpoints require an `Authorization: Bearer <JWT_TOKEN>` header.
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/v1/settings/` | Retrieve backend configuration and runtime telemetry | Yes |
+| `PUT` | `/api/v1/settings/` | Update backend settings (Admin only) | Admin |
 | `GET` | `/api/v1/reports/summary` | Get aggregated KPI summary for Command Center | Yes |
 | `POST` | `/api/v1/reports/generate` | Generate compliance summary report (PDF/CSV/JSON) | Yes |
 
@@ -702,25 +716,25 @@ Evaluated against the standardized **CERT Insider Threat Benchmark (r4.2)**:
 
 ## 🧪 Quality Assurance & Automated Verification
 
-### 1. Run Automated PyTest Test Suites
+### 1. Run Automated PyTest Test Suite
 ```bash
-# Run all 48 unit, integration, API, and XAI tests
-pytest tests/ -v --tb=short
-
-# Run unit tests only
-make test-unit
-
-# Run integration tests only
-make test-integration
+# Run all 51 unit, integration, API, and XAI tests
+PYTHONPATH=. pytest tests/ -v --tb=short
 ```
 
 ### 2. Run XAI Explainability Engine Verification
 ```bash
 # Test Feature Attribution (SHAP), GNN Subgraph, and Multi-Head Attention explainers
-python3 scripts/test_xai_engine.py
+PYTHONPATH=. python3 scripts/test_xai_engine.py
 ```
 
-### 3. Run CERT Dataset Data Flow Simulation
+### 3. Run FastAPI Route Verification Test
+```bash
+# Test health check, OpenAPI documentation schema, and API domain routes
+PYTHONPATH=. python3 scripts/test_fastapi.py
+```
+
+### 4. Run CERT Dataset Data Flow Simulation
 ```bash
 # Simulate 30 employees from CERT r4.2 logs through the THGNN pipeline (dry run)
 python3 scripts/simulate_data_flow.py --users 30
@@ -729,7 +743,7 @@ python3 scripts/simulate_data_flow.py --users 30
 python3 scripts/simulate_data_flow.py --api --users 50
 ```
 
-### 4. End-to-End System Health Check Script
+### 5. End-to-End System Health Check Script
 
 #### On Linux / WSL2:
 ```bash
@@ -830,6 +844,12 @@ If port 8000 (Backend) or 5173 (Frontend) is occupied by a lingering process:
   fuser -k 5173/tcp
   ```
 
+### 4. Google Gemini API Configuration
+If you see template explanations instead of LLM narratives:
+- Verify `GEMINI_API_KEY` is present in your `.env` file.
+- Check that your key has access to `gemini-2.5-flash` or `gemini-pro`.
+- When no key is supplied, the engine automatically falls back to deterministic template-based explanation generation without throwing runtime errors.
+
 ---
 
 ## 🧹 Project Cleanup & Environment Teardown
@@ -894,15 +914,6 @@ find . -type d -name "__pycache__" -exec rm -rf {} +
 find . -type f -name "*.pyc" -delete
 ```
 
-#### 4. Verification Commands
-```bash
-# Verify PYTHONPATH is cleared
-echo $PYTHONPATH
-
-# Verify backend packages are uninstalled
-python3 -c "import fastapi" 2>&1
-```
-
 ---
 
 ## 🗺️ Roadmap & License
@@ -925,7 +936,7 @@ python3 -c "import fastapi" 2>&1
 ### License
 
 This project is open-source software licensed under the **[MIT License](LICENSE)**.
-uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000
+
 ---
 
 <div align="center">
