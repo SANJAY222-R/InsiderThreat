@@ -12,37 +12,44 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
+
 class GraphDatasetLoader(InMemoryDataset):
     """
     Graph dataset loader that supports multiple graph formats:
     PyG HeteroData, NetworkX, GraphML, JSON, and Neo4j exports.
     """
-    def __init__(self, root: str, filename: str, transform=None, pre_transform=None):
+    def __init__(
+        self,
+        root: str,
+        filename: str,
+        transform: Optional[Any] = None,
+        pre_transform: Optional[Any] = None
+    ) -> None:
         self.filename = filename
         super().__init__(root, transform, pre_transform)
         try:
-            self.data, self.slices = torch.load(self.processed_paths[0])
-        except FileNotFoundError:
+            self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
+        except (FileNotFoundError, Exception):
             # Handle missing processed file gracefully by creating dummy data
-            logger.warning("Processed data not found. Processing...")
+            logger.warning("Processed data not found or outdated. Processing...")
             self.process()
-            self.data, self.slices = torch.load(self.processed_paths[0])
+            self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
         
     @property
-    def raw_file_names(self):
+    def raw_file_names(self) -> List[str]:
         return [self.filename]
         
     @property
-    def processed_file_names(self):
+    def processed_file_names(self) -> List[str]:
         return ['data.pt']
         
-    def download(self):
-        pass # Handle external download if needed
+    def download(self) -> None:
+        pass  # Handle external download if needed
         
     def _detect_format_and_load(self, path: str) -> HeteroData:
         ext = os.path.splitext(path)[1].lower()
         if ext == '.pt':
-            data = torch.load(path)
+            data = torch.load(path, weights_only=False)
             if not isinstance(data, HeteroData):
                 raise ValueError("Expected PyG HeteroData object.")
             return data
@@ -51,7 +58,7 @@ class GraphDatasetLoader(InMemoryDataset):
             return self._from_networkx(G)
         elif ext == '.json':
             with open(path, 'r') as f:
-                json_data = json.load(f)
+                json_data: Dict[str, Any] = json.load(f)
             return self._from_json(json_data)
         elif ext in ['.csv', '.txt']:
             return self._from_neo4j_export(path)
@@ -67,7 +74,7 @@ class GraphDatasetLoader(InMemoryDataset):
     def _from_networkx(self, G: nx.Graph) -> HeteroData:
         return from_networkx(G)
 
-    def _from_json(self, json_data: Dict) -> HeteroData:
+    def _from_json(self, json_data: Dict[str, Any]) -> HeteroData:
         data = HeteroData()
         for n_type, nodes in json_data.get('nodes', {}).items():
             features = [n.get('features', []) for n in nodes]
@@ -91,14 +98,14 @@ class GraphDatasetLoader(InMemoryDataset):
         logger.warning("Neo4j export loading is a stub.")
         return data
 
-    def process(self):
+    def process(self) -> None:
         raw_path = self.raw_paths[0]
         if not os.path.exists(raw_path):
             logger.warning(f"File {raw_path} not found. Creating dummy HeteroData for execution continuity.")
             data = HeteroData()
             # Initialize dummy features for expected node types
             for n_type in ['user', 'host', 'file', 'usb', 'email', 'website', 'session', 'department']:
-                data[n_type].x = torch.randn(10, 16) # dummy feature dim 16
+                data[n_type].x = torch.randn(10, 16)  # dummy feature dim 16
                 
             # Dummy edges
             data['user', 'LOGIN_TO', 'host'].edge_index = torch.randint(0, 10, (2, 20))
@@ -112,7 +119,12 @@ class GraphDatasetLoader(InMemoryDataset):
         torch.save(self.collate([data]), self.processed_paths[0])
 
 
-def create_dataloaders(data: HeteroData, batch_size: int = 512, num_neighbors: List[int] = [10, 10], time_attr: str = 'time'):
+def create_dataloaders(
+    data: HeteroData,
+    batch_size: int = 512,
+    num_neighbors: List[int] = [10, 10],
+    time_attr: str = 'time'
+) -> Any:
     """
     Creates temporal and heterogeneous mini-batch dataloaders using NeighborLoader.
     """
