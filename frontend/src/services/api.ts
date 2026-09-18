@@ -112,6 +112,107 @@ class ApiClient {
     });
     return this.handleResponse<T>(response);
   }
+
+  async downloadBlob(
+    endpoint: string,
+    defaultFilename: string = "download",
+    options?: RequestOptions
+  ): Promise<void> {
+    const url = this.buildUrl(endpoint, options?.params);
+    const headers = { ...this.getAuthHeaders(), ...options?.headers };
+    delete headers["Content-Type"];
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers,
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+    }
+
+    if (!response.ok) {
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.detail || errorData.message || errorMessage;
+      } catch {
+        // Response was not JSON
+      }
+      throw new Error(errorMessage);
+    }
+
+    let filename = defaultFilename;
+    const disposition = response.headers.get("Content-Disposition");
+    if (disposition) {
+      const filenameMatch = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+      if (filenameMatch && filenameMatch[1]) {
+        filename = filenameMatch[1].replace(/['"]/g, "").trim();
+      }
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 200);
+  }
+
+  async downloadBlobPost(
+    endpoint: string,
+    data?: unknown,
+    defaultFilename: string = "download",
+    options?: RequestOptions
+  ): Promise<void> {
+    const url = this.buildUrl(endpoint, options?.params);
+    const headers = { ...this.getAuthHeaders(), ...options?.headers };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: data !== undefined ? JSON.stringify(data) : undefined,
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      window.dispatchEvent(new CustomEvent("auth:unauthorized"));
+    }
+
+    if (!response.ok) {
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.detail || errorData.message || errorMessage;
+      } catch {
+        // Response was not JSON
+      }
+      throw new Error(errorMessage);
+    }
+
+    let filename = defaultFilename;
+    const disposition = response.headers.get("Content-Disposition");
+    if (disposition) {
+      const filenameMatch = disposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+      if (filenameMatch && filenameMatch[1]) {
+        filename = filenameMatch[1].replace(/['"]/g, "").trim();
+      }
+    }
+
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 200);
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL);

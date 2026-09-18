@@ -14,7 +14,9 @@ from backend.app.auth.auth_handler import get_password_hash
 from backend.app.database.database import Base, SessionLocal, engine
 from backend.app.models.alert import Alert
 from backend.app.models.prediction import Prediction
+from backend.app.models.report import Report
 from backend.app.models.user import User
+from backend.app.services.report_builder import build_report_data, export_report_file
 
 __all__ = ["seed_db", "seed_db_with_engine"]
 
@@ -269,6 +271,67 @@ def seed_db(db: Session | None = None) -> None:
                 db.add(alert)
 
         db.commit()
+
+        # 4. Seed Baseline Reports
+        if db.query(Report).count() == 0:
+            now = datetime.now(timezone.utc)
+            sample_report_configs = [
+                {
+                    "title": "Comprehensive Threat Analysis & Forensic Summary",
+                    "report_type": "threat_analysis",
+                    "format": "pdf",
+                    "date_from": now - timedelta(days=7),
+                    "date_to": now,
+                    "created_by": "SOC Analyst",
+                },
+                {
+                    "title": "Executive Daily Threat Intelligence Digest",
+                    "report_type": "daily_summary",
+                    "format": "csv",
+                    "date_from": now - timedelta(days=1),
+                    "date_to": now,
+                    "created_by": "SOC Analyst",
+                },
+                {
+                    "title": "Entity Behavioral Deviation & Risk Profile",
+                    "report_type": "user_behavior",
+                    "format": "json",
+                    "date_from": now - timedelta(days=30),
+                    "date_to": now,
+                    "created_by": "Compliance Auditor",
+                },
+            ]
+
+            for rc in sample_report_configs:
+                rep_title, summary_metrics, detailed_data = build_report_data(
+                    db=db,
+                    report_type=rc["report_type"],
+                    date_from=rc["date_from"],
+                    date_to=rc["date_to"],
+                    title=rc["title"],
+                    created_by=rc["created_by"],
+                )
+                report = Report(
+                    title=rep_title,
+                    report_type=rc["report_type"],
+                    format=rc["format"],
+                    status="complete",
+                    date_from=rc["date_from"],
+                    date_to=rc["date_to"],
+                    summary_metrics=summary_metrics,
+                    data=detailed_data,
+                    created_by=rc["created_by"],
+                )
+                db.add(report)
+                db.flush()
+                report.download_url = f"/api/v1/reports/{report.id}/download"
+                try:
+                    content_bytes, _, _ = export_report_file(report)
+                    report.file_size = len(content_bytes)
+                except Exception:
+                    report.file_size = 1024
+
+            db.commit()
 
     except Exception:
         db.rollback()
